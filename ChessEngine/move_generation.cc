@@ -92,10 +92,6 @@ void GeneratePawnMoves(const Board& board, std::vector<Move>* move_list)
 
 void PseudoLegalPawns(const Board& board, std::vector<Move> *move_list, Side side)
 {
-	// TODO there are missing promotions in n1n5/PPPk4/8/8/8/8/4Kppp/5N1N b - - 0 1.
-	// When the black pawn move is a capture it should also be a promotion.
-	// Update: I think this might not be a bug at all in the move generation.
-	// Maybe just in how the moves are dispayed in the 'legal' command.
     if(side == WHITE)
     {
         Bitboard pawns = board.pieces_[WHITE_PAWNS];

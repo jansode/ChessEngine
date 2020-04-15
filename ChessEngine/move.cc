@@ -24,8 +24,13 @@ Move move_from_uci(const Board& board, const std::string& move_str)
     Square from = square_from_algebraic(std::string() + move_str[0] + move_str[1]);
     Square to = square_from_algebraic(std::string() + move_str[2] + move_str[3]);
 
-	PieceType piece = board.GetPieceOnSquare(from);
+	// TODO Check for promotion
+	if (move_str.size() == 5)
+	{
 
+	}
+
+	PieceType piece = board.GetPieceOnSquare(from);
 
     // Find out the move by matching the source and destination squares
     // to a generated move.
@@ -34,41 +39,36 @@ Move move_from_uci(const Board& board, const std::string& move_str)
     move_generation::LegalAll(board,&legal_moves,board.state_.side_to_move);
 
 	// Check if king moves into a castling move.
-	// TODO need to check for checks. 
-	if (piece == WHITE_KING && from == E1)
+	if (piece == WHITE_KING || piece == BLACK_KING)
 	{
-		if (to == G1 && board.CanCastle(WHITE, WHITE_KINGSIDE))
+		if (to == G1 && from == E1 && board.CanCastle(WHITE, WHITE_KINGSIDE))
 		{
 			new_move.type = CASTLE_KINGSIDE;
 			new_move.from = H1; new_move.to = F1;
 			new_move.piece = WHITE_ROOKS;
 			return new_move;
 		}
-		else if (to == C1 && board.CanCastle(WHITE, WHITE_QUEENSIDE))
+		else if (to == C1 && from == E1 && board.CanCastle(WHITE, WHITE_QUEENSIDE))
 		{
 			new_move.type = CASTLE_QUEENSIDE;
 			new_move.from = A1; new_move.to = D1;
 			new_move.piece = WHITE_ROOKS;
 			return new_move;
 		}
-	}
-	else if (piece == BLACK_KING && from == E8)
-	{
-		if (to == G8 && board.CanCastle(BLACK, BLACK_KINGSIDE))
+		else if (to == G8 && from == E8 && board.CanCastle(BLACK, BLACK_KINGSIDE))
 		{
 			new_move.type = CASTLE_KINGSIDE;
 			new_move.from = H8; new_move.to = F8;
 			new_move.piece = BLACK_ROOKS;
 			return new_move;
 		}
-		else if (to == C8 && board.CanCastle(BLACK, BLACK_QUEENSIDE))
+		else if (to == C8 && from == E8 && board.CanCastle(BLACK, BLACK_QUEENSIDE))
 		{
 			new_move.type = CASTLE_QUEENSIDE;
 			new_move.from = A8; new_move.to = D8;
 			new_move.piece = BLACK_ROOKS;
 			return new_move;
 		}
-
 	}
 
     for(Move m : legal_moves)
