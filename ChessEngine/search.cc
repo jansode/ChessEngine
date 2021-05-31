@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <algorithm> // for std::min and std::max
+#include <cmath>
 
 //TranspositionTable transposition_table;
 

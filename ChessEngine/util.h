@@ -39,7 +39,6 @@ std::string algebraic_from_square(Square square);
 // Opposite of above function.
 Square square_from_algebraic(const std::string& square_str);
 
-
 std::string get_piece_name(PieceType piece);
 
 std::string castling_rights_to_string(u8 castling_rights);

@@ -480,6 +480,9 @@ void Board::PrintPosition() const
         std::cout<<letters[GetPieceOnSquare(square_bb)];
         if(square_bb & kBitboardFileH) std::cout<<"\n"  << ranks[curr_rank++] << " ";
     }
+
+    std::cout<<" ";
+
 	for (int file = FILE_A; file < NUM_FILES; ++file)
 	{
 		std::cout << files[file];
