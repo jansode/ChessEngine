@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <sstream>
 
 #include "board.h"
 
@@ -42,11 +43,13 @@ namespace tests
 	// Starts automated perft test that checks the generated moves
 	// against results in the perft results file.
 	// @depth_limit(optional): Max depth of a single search.
-	void start_perft(unsigned depth_limit = DEPTH_LIMIT_UNLIMITED);
+	void start_perft(unsigned depth_limit = DEPTH_LIMIT_UNLIMITED, bool display_only_failed = false);
 
 	// Starts perft test using the current board position as a starting point.
 	// @results(optional): Pointer to PerftResults structure for results to check against.
-	void start_perft(const Board& board, unsigned depth, const PerftResults* results = nullptr);
+    // Returns true if PerftResults matches with the engine results and false if any errors
+    // were found.
+	bool start_perft(const Board& board, unsigned depth, std::ostringstream& result_str, const PerftResults* results = nullptr);
 
 	// Prints a visual bitboard representation of the attacks for 
 	// the given piece for each square on the board. 

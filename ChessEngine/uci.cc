@@ -260,12 +260,14 @@ namespace uci
 			{
 				if (tokens.size() == 0)
 				{
-					tests::start_perft(kDefaultPerftDepth);
+					tests::start_perft(kDefaultPerftDepth,true);
 					continue;
 				}
 
+                /*
 				unsigned depth = std::stoi(tokens[0]);
 				tests::start_perft(board, depth);
+                */
 			}
 			else if (command == "attacks")
 			{

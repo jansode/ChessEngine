@@ -105,24 +105,34 @@ namespace tests
 	// Automated perft tests that 
 	// checks against the results 
 	// in the PerftTestResults vector.
-	void start_perft(unsigned depth_limit)
+	void start_perft(unsigned depth_limit, bool display_only_failed)
 	{
 		Board test_board;
 		for (auto result : PerftTestPositions)
 		{
-			std::cout << "Fen: " << result.fen << "\n";
+            std::ostringstream result_str;
 			test_board.SetPositionFromFEN(result.fen);
-			test_board.PrintPosition();
-			start_perft(test_board, (depth_limit < result.to_depth)?depth_limit:result.to_depth, &result);
+
+			bool results_match = start_perft(test_board, (depth_limit < result.to_depth)?depth_limit:result.to_depth, result_str, &result);
+
+            if(display_only_failed && !results_match)
+            {
+                std::cout << "Fen: " << result.fen << "\n";
+                test_board.PrintPosition();
+                std::cout<< result_str.str();
+            }
 		}
+
 	}
 
-	void start_perft(const Board& board, unsigned depth, const PerftResults* results)
+	bool start_perft(const Board& board, unsigned depth, std::ostringstream& result_str, const PerftResults* results)
 	{
 		++depth;
 
+        bool results_match = true;
 		unsigned nodes = 0;
 		PerftStats stats;
+
 		for (int curr_depth = 0; curr_depth < depth; ++curr_depth)
 		{
 			nodes = perft(board, curr_depth, &stats);
@@ -132,16 +142,19 @@ namespace tests
 			if (results != nullptr)
 			{
 				// Currently checks only nodes.
-				std::cout << "Depth: " << curr_depth;
-				std::cout << " Nodes: " << nodes;
-				std::cout << " Correct nodes: " << results->stats[curr_depth - 1].nodes;
+				result_str << "Depth: " << curr_depth;
+				result_str << " Nodes: " << nodes;
+				result_str << " Correct nodes: " << results->stats[curr_depth - 1].nodes;
 
-				std::string depth_ok = (results->stats[curr_depth-1].nodes == nodes) ? " [OK]" : " [FAILED]";
-				std::cout << depth_ok << "\n";
+                bool match = (results->stats[curr_depth-1].nodes == nodes);
+				std::string depth_ok = match ? " [OK]" : " [FAILED]";
+				result_str << depth_ok << "\n";
+
+                if(!match) results_match = false;
 			}
 			else
 			{
-				std::cout << "Depth: " << curr_depth
+				result_str << "Depth: " << curr_depth
 					<< " Nodes: " << nodes
 					<< " Captures: " << stats.captures
 					<< " Castles: " << stats.castles
@@ -153,6 +166,10 @@ namespace tests
 			nodes = 0;
 			stats = { 0 };
 		}
+
+        result_str << "\n";
+
+        return results_match;
 	}
 
 	void print_attacks(PieceType piece, Square square)
