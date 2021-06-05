@@ -10,6 +10,12 @@ const std::string kPerftResultsFile = "perftsuite.epd";
 
 const int kDefaultPerftDepth = 3;
 
+struct MoveNodes
+{
+    Move m; 
+    unsigned nodes;
+};
+
 struct PerftStats
 {
 	unsigned nodes = 0;
@@ -20,6 +26,10 @@ struct PerftStats
 	unsigned checks = 0;
 	unsigned double_pawn = 0;
 	unsigned checkmates = 0;
+
+    // Stores a list of how many nodes were 
+    // generated at each depth from the given move.
+    std::vector<std::vector<MoveNodes>> depth_results;
 };
 
 struct PerftResults
@@ -32,7 +42,9 @@ struct PerftResults
 
 	// The depth to terminate the test.
 	unsigned to_depth;
+
 };
+
 
 namespace tests
 {
@@ -44,6 +56,8 @@ namespace tests
 	// against results in the perft results file.
 	// @depth_limit(optional): Max depth of a single search.
 	void start_perft(unsigned depth_limit = DEPTH_LIMIT_UNLIMITED, bool display_only_failed = false);
+
+    void perft_results(const Board& board, const PerftResults& result, unsigned depth_limit, bool display_only_failed = false);
 
 	// Starts perft test using the current board position as a starting point.
 	// @results(optional): Pointer to PerftResults structure for results to check against.
