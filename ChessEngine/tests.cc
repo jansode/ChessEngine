@@ -130,7 +130,13 @@ namespace tests
             std::ostringstream result_str;
 			bool results_match = start_perft(board, (depth_limit < result.to_depth)?depth_limit:result.to_depth, result_str, &result);
 
-            if(display_only_failed && !results_match)
+            if(!display_only_failed)
+            {
+                std::cout << "Fen: " << result.fen << "\n";
+                board.PrintPosition();
+                std::cout<< result_str.str();
+            }
+            else if(!results_match)
             {
                 std::cout << "Fen: " << result.fen << "\n";
                 board.PrintPosition();

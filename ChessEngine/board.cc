@@ -163,6 +163,8 @@ bool Board::SetPositionFromFEN(const std::string& fen_string)
 
 	if (curr_state != FULL_MOVES) return false;
 
+    this->fen_string = fen_string;
+
     UpdateZobristHash(); 
 	return true;
 }
@@ -204,7 +206,7 @@ std::string Board::GenerateFenString()
 	fen << ' ' << ((state_.side_to_move == WHITE) ? "w " : "b ");
 
 	if (state_.castling_rights == 0)
-		fen << " - ";
+		fen << "-";
 	else
 	{
 		for (int i = 0; i < 4; ++i)

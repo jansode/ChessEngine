@@ -263,18 +263,34 @@ namespace uci
 					tests::start_perft(kDefaultPerftDepth,true);
 					continue;
 				}
-
-                std::cout<<board.GenerateFenString()<<std::endl;
-
-                auto found = tests::PerftTestPositions.find(board.GenerateFenString());
-                if(found != tests::PerftTestPositions.end())
+                else if(tokens[0] == "current")
                 {
-                    unsigned depth = std::stoi(tokens[0]);
-                    tests::perft_results(board, found->second, depth, false);
+
+                    std::cout<<board.GenerateFenString()<<std::endl;
+
+                    auto found = tests::PerftTestPositions.find(board.fen_string);
+                    if(found != tests::PerftTestPositions.end())
+                    {
+                        unsigned depth = kDefaultPerftDepth;
+                        
+                        if(tokens.size() == 2)
+                            depth = std::stoi(tokens[1]);
+
+                        tests::perft_results(board, found->second, depth, false);
+                    }
+                    else
+                    {
+                        std::cout<<"Couldn't find FEN string in test positions.\n";
+                    }
                 }
-                else
+                else if(tokens[0] == "list")
                 {
-                    std::cout<<"Couldn't find FEN string in test positions.\n";
+                    for(auto result : tests::PerftTestPositions)
+                    {
+                        std::cout<<"Fen: "<<result.second.fen<<"\n";
+                        board.SetPositionFromFEN(result.second.fen);
+                        board.PrintPosition();
+                    }
                 }
 			}
 			else if (command == "attacks")
@@ -301,8 +317,7 @@ namespace uci
 			}
 			else if (command == "fen")
 			{
-				std::string fen = board.GenerateFenString();
-				std::cout << fen << "\n";
+				std::cout << board.fen_string << "\n";
 			}
 			else if (command == "evaluate")
 			{
