@@ -12,8 +12,6 @@
 
 namespace
 {
-	std::vector<PerftResults> PerftTestPositions;
-
 	void read_perft_results_file(const std::string& test_positions_file)
 	{
 		std::ifstream file(test_positions_file);
@@ -53,7 +51,7 @@ namespace
 			results.stats = stats;
 			results.to_depth = split_line.size() - 1;
 			
-			PerftTestPositions.push_back(results);
+            tests::PerftTestPositions.insert(std::make_pair(results.fen, results));
 		}
 	}
 
@@ -103,11 +101,13 @@ namespace
 
         if(depth == start_depth)
         {
+            /*
             std::cout<<"Added to depth result: "<<move_nodes.size() <<"\n";
             for(auto m : move_nodes)
             {
                 std::cout<<move_to_algebraic(m.m)<<" Nodes: "<<m.nodes<<"\n";
             }
+            */
             stats->depth_results.push_back(move_nodes);
         }
 
@@ -117,6 +117,7 @@ namespace
 
 namespace tests
 {
+	std::map<std::string, PerftResults> PerftTestPositions;
 
 	void init_perft(const std::string& perft_results_file)
 	{
@@ -145,8 +146,8 @@ namespace tests
 		Board test_board;
 		for (auto result : PerftTestPositions)
 		{
-			test_board.SetPositionFromFEN(result.fen);
-            perft_results(test_board,result,depth_limit,display_only_failed);
+			test_board.SetPositionFromFEN(result.second.fen);
+            perft_results(test_board,result.second,depth_limit,display_only_failed);
 		}
 	}
 
@@ -177,10 +178,12 @@ namespace tests
 
                 result_str << "Moves: \n";
 
+                /*
                 for(auto move_node : stats.depth_results[0])
                 {
                     result_str << move_to_algebraic(move_node.m) << ":" << move_node.nodes << "\n";
                 }
+                */
 
                 result_str << "\n";
 

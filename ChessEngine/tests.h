@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <sstream>
+#include <map>
 
 #include "board.h"
 
@@ -48,6 +49,8 @@ struct PerftResults
 
 namespace tests
 {
+    extern std::map<std::string, PerftResults> PerftTestPositions;
+
 	const unsigned DEPTH_LIMIT_UNLIMITED = UINT_MAX;
 
 	void init_perft(const std::string& perft_results_file = kPerftResultsFile);

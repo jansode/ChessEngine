@@ -264,11 +264,18 @@ namespace uci
 					continue;
 				}
 
+                std::cout<<board.GenerateFenString()<<std::endl;
 
-                /*
-				unsigned depth = std::stoi(tokens[0]);
-				tests::start_perft(board, depth);
-                */
+                auto found = tests::PerftTestPositions.find(board.GenerateFenString());
+                if(found != tests::PerftTestPositions.end())
+                {
+                    unsigned depth = std::stoi(tokens[0]);
+                    tests::perft_results(board, found->second, depth, false);
+                }
+                else
+                {
+                    std::cout<<"Couldn't find FEN string in test positions.\n";
+                }
 			}
 			else if (command == "attacks")
 			{
