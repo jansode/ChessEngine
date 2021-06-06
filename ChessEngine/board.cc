@@ -465,6 +465,8 @@ bool Board::CanCastle(Side side, Castling type) const
             break;
 
     }
+
+    return true;
 }
 
 void Board::PrintPosition() const

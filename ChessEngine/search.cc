@@ -8,6 +8,7 @@
 #include <iostream>
 #include <algorithm> // for std::min and std::max
 #include <cmath>
+#include <limits>
 
 //TranspositionTable transposition_table;
 
@@ -21,7 +22,7 @@ bool StartSearch(Search *search, Board *board)
 	search->best_move = NULL_MOVE;
 	search->best_eval = evaluation::kDrawScore;
 
-	AlphaBeta(search,board,-INFINITY,INFINITY,3,true);
+	AlphaBeta(search,board,std::numeric_limits<int>::min(),std::numeric_limits<int>::max(),3,true);
 
 	std::cout<<"Search stopped\n";
 
@@ -40,7 +41,7 @@ int AlphaBeta(Search *search, Board *board, int alpha, int beta, int depth, bool
 
 	if(maximizing_side)
 	{
-		int value = INFINITY;
+		int value = std::numeric_limits<int>::max();
 		for(int i=0;i<moves.size();++i)
 		{
 			board->MakeMove(moves[i]);
@@ -62,7 +63,7 @@ int AlphaBeta(Search *search, Board *board, int alpha, int beta, int depth, bool
 	}
 	else
 	{
-		int value = -INFINITY;		
+		int value = std::numeric_limits<int>::min();		
 		for(int i=0;i<moves.size();++i)
 		{
 			board->MakeMove(moves[i]);
@@ -76,6 +77,8 @@ int AlphaBeta(Search *search, Board *board, int alpha, int beta, int depth, bool
 			return value;
 		}
 	}
+
+    return 0;
 }
 
 

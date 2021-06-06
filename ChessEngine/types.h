@@ -76,7 +76,8 @@ enum Rank
     RANK_6,
     RANK_7,
     RANK_8,
-    NUM_RANKS
+    NUM_RANKS,
+    RANK_NONE
 };
 
 enum File
@@ -89,7 +90,8 @@ enum File
     FILE_F,
     FILE_G,
     FILE_H,
-    NUM_FILES
+    NUM_FILES,
+    FILE_NONE
 };
 
 enum Side

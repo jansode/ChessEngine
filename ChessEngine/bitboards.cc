@@ -51,6 +51,8 @@ File GetSquareFile(Square square)
     Bitboard file_bb = kBitboardFileA;
     for(int curr_file=FILE_A;curr_file<NUM_FILES;++curr_file,file_bb>>=1)
         if(file_bb & square_bb) return (File)curr_file;
+
+    return FILE_NONE;
 }
 
 Rank GetSquareRank(Square square)
@@ -61,6 +63,8 @@ Rank GetSquareRank(Square square)
     Bitboard rank_bb = kBitboardRank1;
     for(int curr_rank=RANK_1;curr_rank<NUM_RANKS;++curr_rank,rank_bb<<=8)
         if(rank_bb & square_bb) return (Rank)curr_rank;
+
+    return RANK_NONE;
 }
 
 Bitboard BitboardFromAlgebraic(const std::string& algebraic) 
@@ -100,7 +104,7 @@ Bitboard BitboardFromAlgebraic(const std::string& algebraic)
 
 Square square_from_bitboard(const Bitboard& board)
 {
-	if (board == 0) SQUARE_NONE;
+	if (board == 0) return SQUARE_NONE;
 	
     int square = 0;
     Bitboard curr_square_bb = kBitboardMSB;
@@ -109,6 +113,7 @@ Square square_from_bitboard(const Bitboard& board)
         curr_square_bb>>=1;
         ++square;
     }
+
     return (Square) square;
 }
 
@@ -145,6 +150,8 @@ Bitboard GetEdgeBitboard(Direction direction)
         case WEST:
             return kBitboardFileA;
     }
+
+    return 0ULL;
 }
 
 template <Direction direction>
@@ -187,6 +194,8 @@ Bitboard ShiftDirection(Bitboard board, Direction direction, int shift_amount)
         case WEST:          return board << shift_amount;
         case EAST:          return board >> shift_amount;
     }
+
+    return 0ULL;
 }
 
 Bitboard BlockerRay(Bitboard square_bb, Direction direction, Bitboard blockers)

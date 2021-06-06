@@ -103,6 +103,8 @@ std::string get_move_type(MoveType movetype)
         case CASTLE_QUEENSIDE: return "castle queenside";
 		case PROMOTION: return "promotion";
 	}
+
+    return "";
 }
 
 std::string move_to_algebraic(const Move &m)
