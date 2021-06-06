@@ -440,16 +440,16 @@ void AddCastlingMoves(Castling type, std::vector<Move>* move_list)
     switch(type)
     {
         case WHITE_KINGSIDE:
-            move_list->push_back({F1,H1,WHITE_KINGS,CASTLE_KINGSIDE,PIECE_TYPE_NONE,PIECE_TYPE_NONE,false});
+            move_list->push_back({F1,H1,WHITE_KING,CASTLE_KINGSIDE,PIECE_TYPE_NONE,PIECE_TYPE_NONE,false});
             break;
         case WHITE_QUEENSIDE:
-            move_list->push_back({D1,A1,WHITE_KINGS,CASTLE_QUEENSIDE,PIECE_TYPE_NONE,PIECE_TYPE_NONE,false});
+            move_list->push_back({D1,A1,WHITE_KING,CASTLE_QUEENSIDE,PIECE_TYPE_NONE,PIECE_TYPE_NONE,false});
             break;
         case BLACK_KINGSIDE:
-            move_list->push_back({F8,H8,BLACK_KINGS,CASTLE_KINGSIDE,PIECE_TYPE_NONE,PIECE_TYPE_NONE,false});
+            move_list->push_back({F8,H8,BLACK_KING,CASTLE_KINGSIDE,PIECE_TYPE_NONE,PIECE_TYPE_NONE,false});
             break;
         case BLACK_QUEENSIDE:
-            move_list->push_back({D8,A8,BLACK_KINGS,CASTLE_QUEENSIDE,PIECE_TYPE_NONE,PIECE_TYPE_NONE,false});
+            move_list->push_back({D8,A8,BLACK_KING,CASTLE_QUEENSIDE,PIECE_TYPE_NONE,PIECE_TYPE_NONE,false});
             break;
     }
 }
