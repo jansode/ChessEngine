@@ -268,7 +268,7 @@ namespace uci
 
                     std::cout<<board.GenerateFenString()<<std::endl;
 
-                    auto found = tests::PerftTestPositions.find(board.fen_string);
+                    auto found = tests::PerftTestPositions.find(board.GenerateFenString());
                     if(found != tests::PerftTestPositions.end())
                     {
                         unsigned depth = kDefaultPerftDepth;
@@ -295,6 +295,7 @@ namespace uci
 			}
 			else if (command == "attacks")
 			{
+                // TODO Unimplementd
 				tests::print_attacks(WHITE_BISHOPS);
 			}
 			else if (command == "attacked")
@@ -317,7 +318,7 @@ namespace uci
 			}
 			else if (command == "fen")
 			{
-				std::cout << board.fen_string << "\n";
+				std::cout << board.GenerateFenString() << "\n";
 			}
 			else if (command == "evaluate")
 			{

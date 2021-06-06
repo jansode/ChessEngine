@@ -29,8 +29,9 @@ struct PerftStats
 	unsigned checkmates = 0;
 
     // Stores a list of how many nodes were 
-    // generated at each depth from the given move.
-    std::vector<std::vector<MoveNodes>> depth_results;
+    // generated for each of the moves at the 
+    // first depth.
+    std::vector<MoveNodes> depth_results;
 };
 
 struct PerftResults

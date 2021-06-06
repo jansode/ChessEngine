@@ -62,8 +62,6 @@ namespace
 
 		if (depth == 0) return 1;
 
-        std::vector<MoveNodes> move_nodes;
-
 		move_generation::LegalAll(board, &move_list, board.state_.side_to_move);
 		for (int i = 0;i < move_list.size();++i)
 		{
@@ -74,10 +72,7 @@ namespace
 
 
             if(depth == start_depth)
-            {
-                //std::cout<<"Start depth: "<<start_depth<<" Depth: "<<depth<<" Nodes: "<<nodes<<"\n";
-                move_nodes.push_back({move_list[i],added_nodes});
-            }
+                stats->depth_results.push_back({move_list[i],added_nodes});
 
 			if (move_list[i].capture) ++stats->captures;
 			if (board.InCheck(board.state_.side_to_move))
@@ -97,19 +92,6 @@ namespace
 			}
 			board.UndoMove();
 		}
-
-
-        if(depth == start_depth)
-        {
-            /*
-            std::cout<<"Added to depth result: "<<move_nodes.size() <<"\n";
-            for(auto m : move_nodes)
-            {
-                std::cout<<move_to_algebraic(m.m)<<" Nodes: "<<m.nodes<<"\n";
-            }
-            */
-            stats->depth_results.push_back(move_nodes);
-        }
 
 		return nodes;
 	}
@@ -165,7 +147,7 @@ namespace tests
 		unsigned nodes = 0;
 		PerftStats stats;
 
-		for (int curr_depth = 0; curr_depth < depth; ++curr_depth)
+		for (int curr_depth = 1; curr_depth < depth; ++curr_depth)
 		{
 			nodes = perft(board, curr_depth, curr_depth, &stats);
 
@@ -184,12 +166,10 @@ namespace tests
 
                 result_str << "Moves: \n";
 
-                /*
-                for(auto move_node : stats.depth_results[0])
+                for(auto move_node : stats.depth_results)
                 {
-                    result_str << move_to_algebraic(move_node.m) << ":" << move_node.nodes << "\n";
+                    result_str << move_to_algebraic(move_node.m) << ": " << move_node.nodes << "\n";
                 }
-                */
 
                 result_str << "\n";
 

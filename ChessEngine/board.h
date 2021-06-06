@@ -95,8 +95,6 @@ public:
 
     std::vector<Undo> history_;
 
-    std::string fen_string;
-
 private:
     // Used to calculate Zobrist hash key for a position.
     // InitZobristHashing() fills this with random numbers 

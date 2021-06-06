@@ -163,8 +163,6 @@ bool Board::SetPositionFromFEN(const std::string& fen_string)
 
 	if (curr_state != FULL_MOVES) return false;
 
-    this->fen_string = fen_string;
-
     UpdateZobristHash(); 
 	return true;
 }

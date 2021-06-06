@@ -265,15 +265,6 @@ void PseudoLegalRooks(const Board& board, std::vector<Move>* move_list, Side sid
             AddQuietMoves(square,quiet_moves,WHITE_ROOKS,move_list);
             AddCaptureMoves(square,captures,WHITE_ROOKS,move_list,board);
         }
-
-        if(board.CanCastle(side,WHITE_KINGSIDE))
-        {
-            AddCastlingMoves(WHITE_KINGSIDE,move_list);
-        }
-        if(board.CanCastle(side,WHITE_QUEENSIDE))
-        {
-            AddCastlingMoves(WHITE_QUEENSIDE,move_list);
-        }
     }
     else
     {
@@ -291,15 +282,6 @@ void PseudoLegalRooks(const Board& board, std::vector<Move>* move_list, Side sid
 
             AddQuietMoves(square,quiet_moves,BLACK_ROOKS,move_list);
             AddCaptureMoves(square,captures,BLACK_ROOKS,move_list,board);
-        }
-
-        if(board.CanCastle(side,BLACK_KINGSIDE))
-        {
-            AddCastlingMoves(BLACK_KINGSIDE,move_list);
-        }
-        if(board.CanCastle(side,BLACK_QUEENSIDE))
-        {
-            AddCastlingMoves(BLACK_QUEENSIDE,move_list);
         }
     }
 }
@@ -362,6 +344,15 @@ void PseudoLegalKings(const Board& board, std::vector<Move>* move_list, Side sid
             AddQuietMoves(square,quiet_moves,WHITE_KING,move_list);
             AddCaptureMoves(square,captures,WHITE_KING,move_list,board);
         }
+
+        if(board.CanCastle(side,WHITE_KINGSIDE))
+        {
+            AddCastlingMoves(WHITE_KINGSIDE,move_list);
+        }
+        if(board.CanCastle(side,WHITE_QUEENSIDE))
+        {
+            AddCastlingMoves(WHITE_QUEENSIDE,move_list);
+        }
     }
     else
     {
@@ -379,6 +370,15 @@ void PseudoLegalKings(const Board& board, std::vector<Move>* move_list, Side sid
 
             AddQuietMoves(square,quiet_moves,BLACK_KING,move_list);
             AddCaptureMoves(square,captures,BLACK_KING,move_list,board);
+        }
+
+        if(board.CanCastle(side,BLACK_KINGSIDE))
+        {
+            AddCastlingMoves(BLACK_KINGSIDE,move_list);
+        }
+        if(board.CanCastle(side,BLACK_QUEENSIDE))
+        {
+            AddCastlingMoves(BLACK_QUEENSIDE,move_list);
         }
     }
 }
@@ -440,16 +440,16 @@ void AddCastlingMoves(Castling type, std::vector<Move>* move_list)
     switch(type)
     {
         case WHITE_KINGSIDE:
-            move_list->push_back({H1,F1,WHITE_ROOKS,CASTLE_KINGSIDE,PIECE_TYPE_NONE,PIECE_TYPE_NONE,false});
+            move_list->push_back({F1,H1,WHITE_KINGS,CASTLE_KINGSIDE,PIECE_TYPE_NONE,PIECE_TYPE_NONE,false});
             break;
         case WHITE_QUEENSIDE:
-            move_list->push_back({A1,D1,WHITE_ROOKS,CASTLE_QUEENSIDE,PIECE_TYPE_NONE,PIECE_TYPE_NONE,false});
+            move_list->push_back({D1,A1,WHITE_KINGS,CASTLE_QUEENSIDE,PIECE_TYPE_NONE,PIECE_TYPE_NONE,false});
             break;
         case BLACK_KINGSIDE:
-            move_list->push_back({H8,F8,BLACK_ROOKS,CASTLE_KINGSIDE,PIECE_TYPE_NONE,PIECE_TYPE_NONE,false});
+            move_list->push_back({F8,H8,BLACK_KINGS,CASTLE_KINGSIDE,PIECE_TYPE_NONE,PIECE_TYPE_NONE,false});
             break;
         case BLACK_QUEENSIDE:
-            move_list->push_back({A8,D8,BLACK_ROOKS,CASTLE_QUEENSIDE,PIECE_TYPE_NONE,PIECE_TYPE_NONE,false});
+            move_list->push_back({D8,A8,BLACK_KINGS,CASTLE_QUEENSIDE,PIECE_TYPE_NONE,PIECE_TYPE_NONE,false});
             break;
     }
 }
