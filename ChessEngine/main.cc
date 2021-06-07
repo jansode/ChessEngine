@@ -13,6 +13,7 @@
 
 int main(int argc, char **argv)
 {
+    init_bitboards();
     Board::InitZobristHashing();
     move_generation::Init();
 	tests::init_perft();

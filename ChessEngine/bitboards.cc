@@ -3,6 +3,17 @@
 #include <cassert>
 #include <cctype> // std::tolower
 
+Bitboard kSquareBitboard[NUM_SQUARES] = {0ULL};
+
+void init_bitboards()
+{
+    Bitboard curr_square = kBitboardMSB;
+    for(int i = 0; i<NUM_SQUARES; ++i)
+    {
+        Square sq = (Square) i; 
+        kSquareBitboard[i] = sq;
+    }
+}
 
 void print_bitboard(Bitboard board) 
 {
@@ -17,9 +28,8 @@ void print_bitboard(Bitboard board)
 
 Bitboard bb_from_square(Square square)
 {
-    // TODO Make this just a table lookup or something. No need to bitshift.
     assert((int)square < SQUARE_NONE);
-    return kBitboardMSB >> (int)square;
+    return kSquareBitboard[(int)square];
 }
 
 Bitboard RankFromSquare(Square square)

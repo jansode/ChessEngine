@@ -35,6 +35,10 @@ const Bitboard kCastlingSquaresWQ = (kCastlingSquaresWK << 4) | 0x10;
 const Bitboard kCastlingSquaresBK = kCastlingSquaresWK << 7*8;
 const Bitboard kCastlingSquaresBQ = kCastlingSquaresWQ << 7*8;
 
+extern Bitboard kSquareBitboard[NUM_SQUARES]; 
+
+void init_bitboards();
+
 // Prints a binary representation of the bitboard to stdout. 
 void print_bitboard(Bitboard board);
 
