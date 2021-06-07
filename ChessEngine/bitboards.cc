@@ -4,12 +4,13 @@
 #include <cctype> // std::tolower
 
 
-void print_bitboard(const Bitboard& board) 
+void print_bitboard(Bitboard board) 
 {
+    Bitboard curr_square = kBitboardMSB;
     for(int i=0;i<8;++i)    
     {
-        for(int j=0;j<8;++j)
-            (board & ((kBitboardMSB >> j) >> (i<<3)))?std::cout<<'1':std::cout<<'0';
+        for(int j=0;j<8;++j, curr_square>>=1)
+            (board & curr_square)?std::cout<<'1':std::cout<<'0';
         std::cout<<'\n';
     }
 }
@@ -102,9 +103,9 @@ Bitboard BitboardFromAlgebraic(const std::string& algebraic)
     return rank_bb & file_bb;
 }
 
-Square square_from_bitboard(const Bitboard& board)
+Square square_from_bitboard(Bitboard board)
 {
-	if (board == 0) return SQUARE_NONE;
+	if (board == 0ULL) return SQUARE_NONE;
 	
     int square = 0;
     Bitboard curr_square_bb = kBitboardMSB;

@@ -186,10 +186,6 @@ namespace
 		if (tokens.size() < 1) return;
 
 		Move move = move_from_uci(*board,tokens[0]);
-
-        std::cout<<move.from<<std::endl;
-        std::cout<<move.to<<std::endl;
-
 		board->MakeMove(move);
 	}
 };

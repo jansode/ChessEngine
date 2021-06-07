@@ -36,7 +36,7 @@ const Bitboard kCastlingSquaresBK = kCastlingSquaresWK << 7*8;
 const Bitboard kCastlingSquaresBQ = kCastlingSquaresWQ << 7*8;
 
 // Prints a binary representation of the bitboard to stdout. 
-void print_bitboard(const Bitboard& board);
+void print_bitboard(Bitboard board);
 
 // Returns a bitboard with the given square set. 
 Bitboard bb_from_square(Square square);
@@ -60,7 +60,7 @@ Rank GetSquareRank(Square square);
 Bitboard BitboardFromAlgebraic (const std::string& algebraic);
 
 // Returns a square enumeration from the given bitboard square. 
-Square square_from_bitboard(const Bitboard& board);
+Square square_from_bitboard(Bitboard board);
 
 // Returns the number of set bits on the bitboard.
 int PopulationCount(Bitboard board);

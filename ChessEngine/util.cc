@@ -130,7 +130,8 @@ Square square_from_algebraic(const std::string& square_str)
     for(int i=0;i<NUM_RANKS;++i, rank_bb<<=8)
         if(square_str[1] == "12345678"[i]) break;
 
-    return square_from_bitboard(rank_bb & file_bb);
+    Bitboard result = rank_bb & file_bb;
+    return square_from_bitboard(result);
 }
 
 std::vector<std::string> split_string(const std::string& input_string, char delimiter)
