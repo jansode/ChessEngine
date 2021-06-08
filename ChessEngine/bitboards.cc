@@ -116,7 +116,7 @@ Square square_from_bitboard(Bitboard board)
 	
     int square = 0;
     Bitboard curr_square_bb = kBitboardMSB;
-    while(!(curr_square_bb & board))
+    while((curr_square_bb & board) == 0ULL)
     {
         curr_square_bb>>=1;
         ++square;

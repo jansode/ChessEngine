@@ -167,7 +167,6 @@ bool Board::SetPositionFromFEN(const std::string& fen_string)
 	return true;
 }
 
-// TODO unfinished. Check a2a3 after startpos.
 std::string Board::GenerateFenString()
 {
 	std::stringstream fen;

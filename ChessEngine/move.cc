@@ -5,7 +5,6 @@
 #include "bitboards.h"
 
 #include <string>
-
 #include <iostream>
 
 Move move_from_uci(const Board& board, const std::string& move_str)
@@ -71,7 +70,7 @@ Move move_from_uci(const Board& board, const std::string& move_str)
 		}
 	}
 
-    for(Move m : legal_moves)
+    for(const Move& m : legal_moves)
     {
         if(m.from == from && m.to == to)
         {

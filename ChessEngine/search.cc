@@ -12,12 +12,17 @@
 
 //TranspositionTable transposition_table;
 
+void TerminateSearch(Search *search, bool terminate)
+{
+	search->search_guard.lock();
+    search->stop = terminate; 
+	search->search_guard.unlock();
+}
+
 bool StartSearch(Search *search, Board *board)
 {
 	std::cout<<"Search started\n";
-	search->search_guard.lock();
-    search->stop = false; 
-	search->search_guard.unlock();
+    TerminateSearch(search, false);
 
 	search->best_move = NULL_MOVE;
 	search->best_eval = evaluation::kDrawScore;

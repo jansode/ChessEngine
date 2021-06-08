@@ -27,4 +27,7 @@ bool StartSearch(Search *search, Board *board);
 
 int AlphaBeta(Search *search, Board *board, int alpha, int beta, int depth, bool maximizing_side);
 
+// Terminates the search thread.
+void TerminateSearch(Search *search, bool terminate);
+
 #endif
