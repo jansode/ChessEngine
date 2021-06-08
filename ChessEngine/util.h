@@ -14,6 +14,11 @@
 // Returns PIECE_TYPE_NONE for invalid characters.
 PieceType piece_type_from_character(char character);
 
+// Returns the PieceType enum associated with the given
+// piece string name.
+// Returns PIECE_TYPE_NONE for invalid names.
+PieceType piece_type_from_string(const std::string& piece);
+
 // Get character representation of the piece.
 // If the piece isn't a valid piece the character '.' 
 // is returned.

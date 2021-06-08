@@ -25,6 +25,24 @@ PieceType piece_type_from_character(char character)
     return PIECE_TYPE_NONE;
 }
 
+PieceType piece_type_from_string(const std::string& piece)
+{
+    if(piece == "white pawns") return WHITE_PAWNS;
+    else if(piece == "white knights") return WHITE_KNIGHTS;
+    else if(piece == "white bishops") return WHITE_BISHOPS;
+    else if(piece == "white rooks") return WHITE_ROOKS;
+    else if(piece == "white queen") return WHITE_QUEEN;
+    else if(piece == "white king") return WHITE_KING;
+    else if(piece == "black pawns") return BLACK_PAWNS;
+    else if(piece == "black knights") return BLACK_KNIGHTS;
+    else if(piece == "black bishops") return BLACK_BISHOPS;
+    else if(piece == "black rooks") return BLACK_ROOKS;
+    else if(piece == "black queen") return BLACK_QUEEN;
+    else if(piece == "black king") return BLACK_KING;
+
+    return PIECE_TYPE_NONE;
+}
+
 bool is_valid_piece_character(char character)
 {
     for(int i=0;i<12;++i)
@@ -125,13 +143,16 @@ Square square_from_algebraic(const std::string& square_str)
         return SQUARE_NONE;
 
     for(int i=0;i<NUM_FILES;++i, file_bb>>=1)
+    {
         if(square_str[0] == "abcdefgh"[i]) break;
+    }
 
     for(int i=0;i<NUM_RANKS;++i, rank_bb<<=8)
+    {
         if(square_str[1] == "12345678"[i]) break;
+    }
 
-    Bitboard result = rank_bb & file_bb;
-    return square_from_bitboard(result);
+    return square_from_bitboard(rank_bb & file_bb);
 }
 
 std::vector<std::string> split_string(const std::string& input_string, char delimiter)

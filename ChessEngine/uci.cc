@@ -234,10 +234,7 @@ namespace uci
             {
 				if(!search_active) continue;
 
-				search.search_guard.lock();
-				search.stop = true;
-				search.search_guard.unlock();
-
+                TerminateSearch(&search,true);
 				search_active = false;
             }
             else if(command == "print")
@@ -295,8 +292,22 @@ namespace uci
 			}
 			else if (command == "attacks")
 			{
-                // TODO Unimplementd
-				tests::print_attacks(WHITE_BISHOPS);
+                if(tokens.size() < 1)
+                {
+                    std::cout<<"attacks <piece>\n";
+                    continue;
+                }
+
+                std::string piece_str = "white " + tokens[0];
+                PieceType piece_type = piece_type_from_string(piece_str);
+
+                if(piece_type == PIECE_TYPE_NONE)
+                {
+                    std::cout<<tokens[0]<<" doesn't have a corresponding piece type.\n";
+                    continue;
+                }
+
+				tests::print_attacks(piece_type_from_string(piece_str));
 			}
 			else if (command == "attacked")
 			{
@@ -325,6 +336,14 @@ namespace uci
 				int evaluation = board.Evaluate();
 				std::cout << "Evaluation: " << evaluation << "\n";
 			}
+            else if(command == "isready")
+            {
+                std::cout<< "readyok\n"; 
+            }
+            else if(command == "quit")
+            {
+                exit(EXIT_SUCCESS);
+            }
             else
             {
                 std::cout<<"Unknown command: "<< command << std::endl;
