@@ -33,6 +33,8 @@ class Board
 
 public:
     Board();
+    Board(const Board& board);
+    Board& operator=(const Board& board);
 
     static void InitZobristHashing();
 
@@ -43,6 +45,11 @@ public:
     // Resets the board to initial values.
     // The piece bitboards are reset to zero.
     void Reset();
+
+    // Resets the board to the given state.
+    // The pieces pointer should point to a 
+    // similar array like the pieces_ member variable.
+    void Reset(Bitboard *pieces, const State& state);
 
     // Prints the current position to stdout.
     void PrintPosition() const;

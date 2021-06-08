@@ -23,6 +23,16 @@ Board::Board()
     Reset();
 }
 
+Board::Board(const Board& board)
+{
+    //TODO
+}
+
+Board& Board::operator=(const Board& board)
+{
+    //TODO
+}
+
 void Board::Reset()
 {
     state_.hash = 0;
@@ -35,12 +45,25 @@ void Board::Reset()
     std::fill(pieces_,pieces_+NUM_PIECE_TYPES,0);
 }
 
+void Board::Reset(Bitboard *pieces, const State& state)
+{ 
+    state_ = state;
+
+    for(int i = WHITE_PAWNS; i < NUM_PIECE_TYPES; ++i)
+        pieces_[i] = *(pieces+i);
+}
+
 bool Board::SetPositionFromFEN(const std::string& fen_string)
 {
-	// TODO Here we should probably check the validity 
-	// of the string before making modifications to the board.
-    Reset();
+    // Take copies of board state so that the board
+    // can be reset if an error occurs.
+    Bitboard pieces_copy[NUM_PIECE_TYPES];
+    State state_copy = state_;
 
+    for(int piece = WHITE_PAWNS; piece < NUM_PIECE_TYPES; ++piece)
+        pieces_copy[piece] = pieces_[piece];
+
+    Reset();
     state_.castling_rights = 0;
 
     Bitboard curr_square = kBitboardRank8 & kBitboardFileA;
@@ -161,7 +184,11 @@ bool Board::SetPositionFromFEN(const std::string& fen_string)
         }
     }
 
-	if (curr_state != FULL_MOVES) return false;
+	if (curr_state != FULL_MOVES) 
+    {
+        Reset(pieces_copy,state_copy);
+        return false;
+    }
 
     UpdateZobristHash(); 
 	return true;
