@@ -172,16 +172,18 @@ std::string Board::GenerateFenString()
 	std::stringstream fen;
 
 	int empty_squares = 0;
-	for (int curr_square = A8; curr_square < NUM_SQUARES; ++curr_square)
+	for (int curr_square = A8; curr_square < SQUARE_NONE; ++curr_square)
 	{
-		if (curr_square != 0 && (curr_square % NUM_FILES) == 0)
+		if ((curr_square != 0) && ((curr_square % NUM_FILES) == 0))
 		{
 			if (empty_squares)
 			{
 				fen << empty_squares;
 				empty_squares = 0;
 			}
-			fen << '/';
+            
+            if(curr_square != NUM_SQUARES)
+                fen << '/';
 		}
 
 		PieceType curr_piece = PIECE_TYPE_NONE;
@@ -208,8 +210,8 @@ std::string Board::GenerateFenString()
 	{
 		for (int i = 0; i < 4; ++i)
 		{
-			if (state_.castling_rights & (BLACK_QUEENSIDE << i))
-				fen << "KQkq"[i];
+			if (state_.castling_rights & (0x1 << i))
+				fen << "qkQK"[i];
 		}
 	}
 
