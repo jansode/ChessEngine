@@ -7,12 +7,9 @@ Bitboard kSquareBitboard[NUM_SQUARES] = {0ULL};
 
 void init_bitboards()
 {
-    Bitboard curr_square = kBitboardMSB;
-    for(int i = 0; i<NUM_SQUARES; ++i)
-    {
-        Square sq = (Square) i; 
-        kSquareBitboard[i] = sq;
-    }
+    Bitboard curr_square = 1ULL;
+    for(int i = H1; i>=0; --i, curr_square<<=1)
+        kSquareBitboard[i] = curr_square;
 }
 
 void print_bitboard(Bitboard board) 
