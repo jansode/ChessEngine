@@ -23,6 +23,22 @@ Board::Board()
     Reset();
 }
 
+Board::Board(const Board& board)
+{
+    *this = board;
+}
+
+Board& Board::operator=(const Board& board)
+{
+    for(int i=0; i<NUM_PIECE_TYPES; ++i)
+        this->pieces_[i] = board.pieces_[i];
+
+    this->state_ = board.state_;
+    this->history_ = board.history_;
+
+    return *this;
+}
+
 void Board::Reset()
 {
     state_.hash = 0;
@@ -283,29 +299,17 @@ void Board::MakeMove(Move move)
         case CASTLE_KINGSIDE:
         {
             if(side == WHITE) 
-            {
                 state_.castling_rights &= ~WHITE_KINGSIDE;
-                pieces_[WHITE_KING] >>= 2;
-            }
             else 
-            {
                 state_.castling_rights &= ~BLACK_KINGSIDE;
-                pieces_[BLACK_KING] >>= 2;
-            }
             break;
         }
         case CASTLE_QUEENSIDE:
         {
             if(side == WHITE) 
-            {
                 state_.castling_rights &= ~WHITE_QUEENSIDE;
-                pieces_[WHITE_KING] <<= 2;
-            }
             else 
-            {
                 state_.castling_rights &= ~BLACK_QUEENSIDE;
-                pieces_[BLACK_KING] <<= 2;
-            }
             break;
         }
     }
@@ -374,7 +378,6 @@ bool Board::SquareAttacked(Square square, Side side) const
     Bitboard occupied_opponent = OccupiedBySide(opponent);
     Bitboard occupied = GetOccupied();
 
-
     // For each opponent piece, compare their attacks 
     // to the square. Make a copy of the occupy mask 
     // because we need the unmodified one inside the loop.
@@ -412,6 +415,9 @@ bool Board::InCheck(Side side) const
 {
     PieceType piece = (side == WHITE)?WHITE_KING:BLACK_KING;
     Square king_square = square_from_bitboard(pieces_[(int)piece]);
+
+    std::cout<<algebraic_from_square(king_square)<<"\n";
+
     return SquareAttacked(king_square,side);
 }
 

@@ -33,6 +33,8 @@ class Board
 
 public:
     Board();
+    Board(const Board& board);
+    Board& operator=(const Board& board);
 
     static void InitZobristHashing();
 
