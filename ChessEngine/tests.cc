@@ -30,6 +30,8 @@ namespace
 				return;
 			}
 
+            trim_string(&split_line[0]);
+
 			// TODO make validate fen function.
 			results.fen = split_line[0];
 			std::vector<PerftStats> stats;

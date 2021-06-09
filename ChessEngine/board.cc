@@ -416,8 +416,6 @@ bool Board::InCheck(Side side) const
     PieceType piece = (side == WHITE)?WHITE_KING:BLACK_KING;
     Square king_square = square_from_bitboard(pieces_[(int)piece]);
 
-    std::cout<<algebraic_from_square(king_square)<<"\n";
-
     return SquareAttacked(king_square,side);
 }
 

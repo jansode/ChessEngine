@@ -4,6 +4,7 @@
 #include <string>
 #include <cassert>
 #include <iostream>
+#include <algorithm>
 
 PieceType piece_type_from_character(char character)
 {
@@ -159,7 +160,7 @@ std::vector<std::string> split_string(const std::string& input_string, char deli
 {
 	std::vector<std::string> split_string;
 
-	std::string curr_substring;
+	std::string curr_substring(""); 
 	for (char c : input_string)
 	{
 		if (c == delimiter)
@@ -173,6 +174,19 @@ std::vector<std::string> split_string(const std::string& input_string, char deli
 	}
 
 	return split_string;
+}
+
+std::string trim_string(std::string *s)
+{
+    s->erase(s->begin(), std::find_if(s->begin(), s->end(), [](unsigned char ch){
+        return !std::isspace(ch);             
+    }));
+
+    s->erase(std::find_if(s->rbegin(), s->rend(), [](unsigned char ch){
+        return !std::isspace(ch);             
+    }).base(), s->end());
+
+    return *s;
 }
 
 bool piece_of_type(PieceType piece_type, Piece piece)

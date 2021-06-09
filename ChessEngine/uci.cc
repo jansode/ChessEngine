@@ -262,9 +262,6 @@ namespace uci
 				}
                 else if(tokens[0] == "current")
                 {
-
-                    std::cout<<board.GenerateFenString()<<std::endl;
-
                     auto found = tests::PerftTestPositions.find(board.GenerateFenString());
                     if(found != tests::PerftTestPositions.end())
                     {

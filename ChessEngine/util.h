@@ -56,4 +56,8 @@ bool is_sliding_piece(PieceType piece);
 std::string move_to_algebraic(const Move &m);
 
 std::vector<std::string> split_string(const std::string& input_string, char delimiter);
+
+// Remove whitespace from beginning and end. Returns a copy of the modified string.
+std::string trim_string(std::string* s);
+
 #endif
