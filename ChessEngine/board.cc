@@ -23,16 +23,6 @@ Board::Board()
     Reset();
 }
 
-Board::Board(const Board& board)
-{
-    //TODO
-}
-
-Board& Board::operator=(const Board& board)
-{
-    //TODO
-}
-
 void Board::Reset()
 {
     state_.hash = 0;
@@ -41,6 +31,8 @@ void Board::Reset()
     state_.half_moves = 0;
     state_.full_moves = 1;
     state_.en_passant_square = SQUARE_NONE;
+    state_.king_has_moved[0] = false;
+    state_.king_has_moved[1] = false;
 
     std::fill(pieces_,pieces_+NUM_PIECE_TYPES,0);
 }
@@ -57,11 +49,13 @@ bool Board::SetPositionFromFEN(const std::string& fen_string)
 {
     // Take copies of board state so that the board
     // can be reset if an error occurs.
+    /*
     Bitboard pieces_copy[NUM_PIECE_TYPES];
     State state_copy = state_;
 
     for(int piece = WHITE_PAWNS; piece < NUM_PIECE_TYPES; ++piece)
         pieces_copy[piece] = pieces_[piece];
+        */
 
     Reset();
     state_.castling_rights = 0;
@@ -186,7 +180,7 @@ bool Board::SetPositionFromFEN(const std::string& fen_string)
 
 	if (curr_state != FULL_MOVES) 
     {
-        Reset(pieces_copy,state_copy);
+        //Reset(pieces_copy,state_copy);
         return false;
     }
 
