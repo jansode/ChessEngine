@@ -316,6 +316,10 @@ namespace uci
 			{
 				make_move(&board, tokens);
 			}
+            else if (command == "undomove")
+            {
+                board.UndoMove();
+            }
 			else if (command == "reset")
 			{
 				board.Reset();
