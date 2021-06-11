@@ -149,24 +149,41 @@ namespace
 
     void go(Search *search, Board *board, const std::vector<std::string>& tokens)
     {
-		for (auto token : tokens)
+		for (int i=0; i<tokens.size(); ++i)
 		{
-			if (token == "infinite")
+			if (tokens[i] == "infinite")
 			{
 				search->duration = 0;
 			}
-			else if (token == "movetime")
+			else if (tokens[i] == "movetime")
 			{
-				search->duration = std::stoi(token,nullptr,10);
+                if(i == tokens.size()-1)
+                {
+                    std::cout<<"Missing parameter to "<<tokens[i]<<"\n";
+                    return;
+                }
+
+				search->duration = std::stoi(tokens[++i],nullptr,10);
 			}
-			else if (token == "depth")
-			{
-				search->depth= std::stoi(token,nullptr,10);
-			}
-			else if (token == "nodes")
-			{
-				search->nodes = std::stoi(token,nullptr,10);
-			}
+            else if (tokens[i] == "nodes")
+            {
+                if(i == tokens.size()-1)
+                {
+                    std::cout<<"Missing parameter to "<<tokens[i]<<"\n";
+                    return;
+                }
+				search->nodes = std::stoi(tokens[++i],nullptr,10);
+
+            }
+            else if (tokens[i] == "depth")
+            {
+                if(i == tokens.size()-1)
+                {
+                    std::cout<<"Missing parameter to "<<tokens[i]<<"\n";
+                    return;
+                }
+				search->depth = std::stoi(tokens[++i],nullptr,10);
+            }
 		}
     }
 
