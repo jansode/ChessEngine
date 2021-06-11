@@ -62,7 +62,7 @@ public:
     bool SetPositionFromFEN(const std::string& fen_string);
 
 	// Generate FEN string from current position.
-	std::string GenerateFenString();
+	std::string GenerateFenString() const;
 
     // Makes a move on the board.
     void MakeMove(Move move);

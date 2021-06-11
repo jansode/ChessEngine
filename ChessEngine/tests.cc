@@ -72,7 +72,6 @@ namespace
 			added_nodes = perft(board, depth - 1, start_depth, stats);
 			nodes += added_nodes;
 
-
             if(depth == start_depth)
                 stats->depth_results.push_back({move_list[i],added_nodes});
 
@@ -109,25 +108,6 @@ namespace tests
 		read_perft_results_file(perft_results_file);
 	}
 
-    void perft_results(const Board& board, const PerftResults& result, unsigned depth_limit, bool display_only_failed)
-    {
-        std::ostringstream result_str;
-        bool results_match = start_perft(board, (depth_limit < result.to_depth)?depth_limit:result.to_depth, result_str, &result);
-
-        if(!display_only_failed)
-        {
-            std::cout << "Fen: " << result.fen << "\n";
-            board.PrintPosition();
-            std::cout<< result_str.str();
-        }
-        else if(!results_match)
-        {
-            std::cout << "Fen: " << result.fen << "\n";
-            board.PrintPosition();
-            std::cout<< result_str.str();
-        }
-    }
-
 	// Automated perft tests that 
 	// checks against the results 
 	// in the PerftTestResults vector.
@@ -137,9 +117,33 @@ namespace tests
 		for (auto result : PerftTestPositions)
 		{
 			test_board.SetPositionFromFEN(result.second.fen);
-            perft_results(test_board,result.second,depth_limit,display_only_failed);
+            perft_results(test_board,&result.second,depth_limit,display_only_failed);
 		}
 	}
+
+    void perft_results(const Board& board, PerftResults* result, unsigned depth_limit, bool display_only_failed)
+    {
+        unsigned depth = depth_limit;
+        if(result != nullptr)
+            depth = result->to_depth;
+
+        std::ostringstream result_str;
+        bool results_match = start_perft(board, depth, result_str, result);
+
+        std::string fen = board.GenerateFenString();
+        std::cout << "Fen: " << fen << "\n";
+
+        if(!display_only_failed)
+        {
+            board.PrintPosition();
+            std::cout<< result_str.str();
+        }
+        else if(!results_match)
+        {
+            board.PrintPosition();
+            std::cout<< result_str.str();
+        }
+    }
 
 	bool start_perft(const Board& board, unsigned depth, std::ostringstream& result_str, const PerftResults* results)
 	{
@@ -155,13 +159,13 @@ namespace tests
 
 			if (curr_depth == 0) continue;
 
+            // Currently checks only nodes.
+            result_str << " Depth: " << curr_depth;
+            result_str << " Nodes: " << nodes;
+
 			if (results != nullptr)
 			{
-				// Currently checks only nodes.
-				result_str << " Depth: " << curr_depth;
-				result_str << " Nodes: " << nodes;
-				result_str << " Correct nodes: " << results->stats[curr_depth - 1].nodes;
-
+                result_str << " Correct nodes: " << results->stats[curr_depth - 1].nodes;
                 bool match = (results->stats[curr_depth-1].nodes == nodes);
 				std::string depth_ok = match ? " [OK]" : " [FAILED]";
 				result_str << depth_ok << "\n";
@@ -169,9 +173,7 @@ namespace tests
                 result_str << "Moves: \n";
 
                 for(auto move_node : stats.depth_results)
-                {
                     result_str << move_to_algebraic(move_node.m) << ": " << move_node.nodes << "\n";
-                }
 
                 result_str << "\n";
 
@@ -179,14 +181,12 @@ namespace tests
 			}
 			else
 			{
-				result_str << "Depth: " << curr_depth
-					<< " Nodes: " << nodes
-					<< " Captures: " << stats.captures
-					<< " Castles: " << stats.castles
-					<< " Promotions: " << stats.promotions
-					<< " Checks: " << stats.checks
-					<< " Checkmates: " << stats.checkmates
-					<< "\n";
+                result_str << "\nMoves: \n";
+
+                for(auto move_node : stats.depth_results)
+                    result_str << move_to_algebraic(move_node.m) << ": " << move_node.nodes << "\n";
+
+                result_str << "\n";
 			}
 			nodes = 0;
 			stats = { 0 };

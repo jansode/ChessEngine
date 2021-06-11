@@ -205,6 +205,57 @@ namespace
 		Move move = move_from_uci(*board,tokens[0]);
 		board->MakeMove(move);
 	}
+
+    void attacks(const std::vector<std::string>& tokens)
+    {
+        if(tokens.size() < 1)
+        {
+            std::cout<<"attacks <piece>\n";
+            return;
+        }
+
+        std::string piece_str = "white " + tokens[0];
+        PieceType piece_type = piece_type_from_string(piece_str);
+
+        if(piece_type == PIECE_TYPE_NONE)
+        {
+            std::cout<<tokens[0]<<" doesn't have a corresponding piece type.\n";
+            return;
+        }
+
+        tests::print_attacks(piece_type_from_string(piece_str));
+    }
+
+    void perft(Board *board, const std::vector<std::string>& tokens)
+    {
+        if (tokens.size() == 0)
+        {
+            tests::start_perft(kDefaultPerftDepth,true);
+            return;
+        }
+        else if(tokens[0] == "current")
+        {
+            unsigned depth = kDefaultPerftDepth;
+            
+            if(tokens.size() == 2)
+                depth = std::stoi(tokens[1]);
+
+            auto found = tests::PerftTestPositions.find(board->GenerateFenString());
+            if(found != tests::PerftTestPositions.end())
+                tests::perft_results(*board, &found->second, depth, false);
+            else
+                tests::perft_results(*board, nullptr, depth, false);
+        }
+        else if(tokens[0] == "list")
+        {
+            for(auto result : tests::PerftTestPositions)
+            {
+                std::cout<<"Fen: "<<result.second.fen<<"\n";
+                board->SetPositionFromFEN(result.second.fen);
+                board->PrintPosition();
+            }
+        }
+    }
 };
 
 namespace uci
@@ -272,56 +323,11 @@ namespace uci
             }
 			else if(command == "perft")
 			{
-				if (tokens.size() == 0)
-				{
-					tests::start_perft(kDefaultPerftDepth,true);
-					continue;
-				}
-                else if(tokens[0] == "current")
-                {
-                    auto found = tests::PerftTestPositions.find(board.GenerateFenString());
-                    if(found != tests::PerftTestPositions.end())
-                    {
-                        unsigned depth = kDefaultPerftDepth;
-                        
-                        if(tokens.size() == 2)
-                            depth = std::stoi(tokens[1]);
-
-                        tests::perft_results(board, found->second, depth, false);
-                    }
-                    else
-                    {
-                        std::cout<<"Couldn't find FEN string in test positions.\n";
-                    }
-                }
-                else if(tokens[0] == "list")
-                {
-                    for(auto result : tests::PerftTestPositions)
-                    {
-                        std::cout<<"Fen: "<<result.second.fen<<"\n";
-                        board.SetPositionFromFEN(result.second.fen);
-                        board.PrintPosition();
-                    }
-                }
+                perft(&board, tokens);
 			}
 			else if (command == "attacks")
 			{
-                if(tokens.size() < 1)
-                {
-                    std::cout<<"attacks <piece>\n";
-                    continue;
-                }
-
-                std::string piece_str = "white " + tokens[0];
-                PieceType piece_type = piece_type_from_string(piece_str);
-
-                if(piece_type == PIECE_TYPE_NONE)
-                {
-                    std::cout<<tokens[0]<<" doesn't have a corresponding piece type.\n";
-                    continue;
-                }
-
-				tests::print_attacks(piece_type_from_string(piece_str));
+                attacks(tokens);
 			}
 			else if (command == "attacked")
 			{
@@ -329,6 +335,10 @@ namespace uci
 				// for the opposing side.
 				list_attacked(&board);
 			}
+            else if(command == "bitboard")
+            {
+                //TODO print bitboard for given piece type.
+            }
 			else if (command == "makemove")
 			{
 				make_move(&board, tokens);

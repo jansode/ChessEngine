@@ -61,7 +61,7 @@ namespace tests
 	// @depth_limit(optional): Max depth of a single search.
 	void start_perft(unsigned depth_limit = DEPTH_LIMIT_UNLIMITED, bool display_only_failed = false);
 
-    void perft_results(const Board& board, const PerftResults& result, unsigned depth_limit, bool display_only_failed = false);
+    void perft_results(const Board& board, PerftResults* result, unsigned depth_limit, bool display_only_failed = false);
 
 	// Starts perft test using the current board position as a starting point.
 	// @results(optional): Pointer to PerftResults structure for results to check against.

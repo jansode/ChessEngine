@@ -204,7 +204,7 @@ bool Board::SetPositionFromFEN(const std::string& fen_string)
 	return true;
 }
 
-std::string Board::GenerateFenString()
+std::string Board::GenerateFenString() const
 {
 	std::stringstream fen;
 
