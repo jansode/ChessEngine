@@ -263,8 +263,9 @@ namespace
         if(tokens.size() == 0)
             return;
         
-        PieceType piece = piece_type_from_string(tokens[0]);
-        if(piece != PIECE_TYPE_NONE)
+        std::string piece_type = std::string("") + tokens[0] + " " + tokens[1];
+        PieceType piece = piece_type_from_string(piece_type);
+        if(piece == PIECE_TYPE_NONE)
             return;
 
         print_bitboard(board->pieces_[piece]);
