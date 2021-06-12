@@ -8,6 +8,7 @@
 #include "search.h"
 #include "util.h"
 #include "tests.h"
+#include "bitboards.h"
 
 
 namespace 
@@ -256,6 +257,18 @@ namespace
             }
         }
     }
+
+    void piece_bitboard(Board *board, const std::vector<std::string>& tokens)
+    {
+        if(tokens.size() == 0)
+            return;
+        
+        PieceType piece = piece_type_from_string(tokens[0]);
+        if(piece != PIECE_TYPE_NONE)
+            return;
+
+        print_bitboard(board->pieces_[piece]);
+    }
 };
 
 namespace uci
@@ -337,7 +350,7 @@ namespace uci
 			}
             else if(command == "bitboard")
             {
-                //TODO print bitboard for given piece type.
+                piece_bitboard(&board,tokens);
             }
 			else if (command == "makemove")
 			{
