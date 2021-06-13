@@ -124,7 +124,7 @@ namespace tests
     void perft_results(const Board& board, PerftResults* result, unsigned depth_limit, bool display_only_failed)
     {
         unsigned depth = depth_limit;
-        if(result != nullptr && depth_limit < result->to_depth)
+        if(result != nullptr && depth_limit > result->to_depth)
             depth = result->to_depth;
 
         std::ostringstream result_str;
