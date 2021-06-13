@@ -349,7 +349,7 @@ namespace uci
 				// for the opposing side.
 				list_attacked(&board);
 			}
-            else if(command == "bitboard")
+            else if (command == "bitboard")
             {
                 piece_bitboard(&board,tokens);
             }
@@ -388,6 +388,11 @@ namespace uci
             }
             else
             {
+                if(std::cin.eof())
+                {
+                    exit(EXIT_SUCCESS);
+                }
+
                 std::cout<<"Unknown command: "<< command << std::endl;
             }
         }
