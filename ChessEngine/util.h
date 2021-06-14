@@ -31,6 +31,10 @@ bool is_valid_piece_character(char character);
 // TODO switch the names of PieceType and Piece enums. 
 bool piece_of_type(PieceType piece_type, Piece piece);
 
+// Returns the PieceType enum from the corresponding Piece enum.
+// For example: piece=PAWNS, Side=WHITE => WHITE_PAWNS
+PieceType piece_type_from_piece(Piece piece, Side side);
+
 Side get_piece_color(PieceType piece);
 
 inline Side get_opposing_side(Side side){return ((side == WHITE)?BLACK:WHITE);}

@@ -9,6 +9,8 @@
 
 Move move_from_uci(const Board& board, const std::string& move_str)
 {
+    Side side = board.state_.side_to_move;
+
     // If no move can be parsed, return these defaults.
     Move new_move = {SQUARE_NONE,
                      SQUARE_NONE,
@@ -23,11 +25,6 @@ Move move_from_uci(const Board& board, const std::string& move_str)
     Square from = square_from_algebraic(std::string() + move_str[0] + move_str[1]);
     Square to = square_from_algebraic(std::string() + move_str[2] + move_str[3]);
 
-	// TODO Check for promotion
-	if (move_str.size() == 5)
-	{
-
-	}
 
 	PieceType piece = board.GetPieceOnSquare(from);
 
@@ -35,7 +32,7 @@ Move move_from_uci(const Board& board, const std::string& move_str)
     // to a generated move.
     Board tmp_board = board; 
     std::vector<Move> legal_moves;
-    move_generation::LegalAll(board,&legal_moves,board.state_.side_to_move);
+    move_generation::LegalAll(board,&legal_moves,side);
 
 	// Check if king moves into a castling move.
 	if (piece == WHITE_KING || piece == BLACK_KING)
@@ -70,6 +67,7 @@ Move move_from_uci(const Board& board, const std::string& move_str)
 		}
 	}
 
+    // Check that the move is a legal move.
     for(const Move& m : legal_moves)
     {
         if(m.from == from && m.to == to)
@@ -78,7 +76,22 @@ Move move_from_uci(const Board& board, const std::string& move_str)
             break;
         }
     }
-    
+
+    // Promotion move.
+    PieceType promotion = PIECE_TYPE_NONE;
+	if (move_str.size() == 5)
+	{
+        switch(move_str[4])
+        {
+            case 'k': promotion = piece_type_from_piece(KNIGHTS,side); break;
+            case 'b': promotion = piece_type_from_piece(BISHOPS,side); break;
+            case 'r': promotion = piece_type_from_piece(ROOKS,side); break;
+            case 'q': promotion = piece_type_from_piece(QUEENS,side); break;
+            default: break;
+        }
+	}
+    new_move.promotion = promotion;
+
     return new_move;
 }
 

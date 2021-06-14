@@ -215,3 +215,17 @@ bool piece_of_type(PieceType piece_type, Piece piece)
 			return false;
 	}
 }
+
+PieceType piece_type_from_piece(Piece piece, Side side)
+{
+    switch(piece)
+    {
+        case PAWNS:         return (side==WHITE)?WHITE_PAWNS:BLACK_PAWNS;
+        case KNIGHTS:       return (side==WHITE)?WHITE_KNIGHTS:BLACK_KNIGHTS;
+        case BISHOPS:       return (side==WHITE)?WHITE_BISHOPS:BLACK_BISHOPS;
+        case ROOKS:         return (side==WHITE)?WHITE_ROOKS:BLACK_ROOKS;
+        case QUEENS:        return (side==WHITE)?WHITE_QUEEN:BLACK_QUEEN;
+        case KINGS:         return (side==WHITE)?WHITE_KING:BLACK_KING;
+        default:            return PIECE_TYPE_NONE;
+    }
+}
