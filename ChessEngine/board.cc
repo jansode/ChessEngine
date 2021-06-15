@@ -263,6 +263,26 @@ std::string Board::GenerateFenString() const
 	return fen.str();
 }
 
+void Board::MovePiece(Square from, Square to)
+{
+    Bitboard from_bb = bb_from_square(from);
+    Bitboard to_bb = bb_from_square(to);
+    Bitboard from_to_bb = from_bb | to_bb;
+
+    PieceType piece = GetPieceOnSquare(from);
+    pieces_[piece] ^= from_to_bb;
+    
+}
+
+void Board::MovePiece(Square from, Square to, PieceType piece)
+{
+    Bitboard from_bb = bb_from_square(from);
+    Bitboard to_bb = bb_from_square(to);
+    Bitboard from_to_bb = from_bb | to_bb;
+    pieces_[piece] ^= from_to_bb;
+    
+}
+
 void Board::MakeMove(Move move)
 {
 	if (piece_of_type(move.piece, KINGS) && !state_.king_has_moved[state_.side_to_move])
@@ -291,40 +311,51 @@ void Board::MakeMove(Move move)
             state_.en_passant_square = (Square)((side == WHITE)?move.to-8:move.to+8);
             break;
         }
-        // The rook moves for 
+        // The king moves for 
         // castling is handled 
         // like a normal move.
         // These switch cases move 
-        // the king.
+        // the rook.
         case CASTLE_KINGSIDE:
         {
             if(side == WHITE) 
+            {
+                MovePiece(H1,F1,WHITE_ROOKS);
                 state_.castling_rights &= ~WHITE_KINGSIDE;
+            }
             else 
+            {
+                MovePiece(H8,F8,BLACK_ROOKS);
                 state_.castling_rights &= ~BLACK_KINGSIDE;
+            }
             break;
         }
         case CASTLE_QUEENSIDE:
         {
             if(side == WHITE) 
+            {
+                MovePiece(A1,D1,WHITE_ROOKS);
                 state_.castling_rights &= ~WHITE_QUEENSIDE;
+            }
             else 
+            {
+                MovePiece(A8,D8,BLACK_ROOKS);
                 state_.castling_rights &= ~BLACK_QUEENSIDE;
+            }
             break;
         }
     }
 
     // Update pieces 
-    Bitboard from = bb_from_square(move.from);
-    Bitboard to = bb_from_square(move.to);
-    Bitboard from_to_bb = from | to;
-    pieces_[move.piece] ^= from_to_bb;
+    MovePiece(move.from,move.to);
 
-    if(move.capture) pieces_[move.captured_type] &= ~to;
+    Bitboard to_bb = bb_from_square(move.to);
+
+    if(move.capture) pieces_[move.captured_type] &= ~to_bb;
     if(move.promotion != PIECE_TYPE_NONE) 
     {
-        pieces_[move.piece] &= ~to;
-        pieces_[move.promotion] |= to;
+        pieces_[move.piece] &= ~to_bb;
+        pieces_[move.promotion] |= to_bb;
     }
 }
 
@@ -341,6 +372,7 @@ void Board::UndoMove()
 
     Move undo_move = undo_info.move; 
 
+    // TODO 
     switch(undo_move.type)
     {
         case CASTLE_KINGSIDE:

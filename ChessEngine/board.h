@@ -67,6 +67,10 @@ public:
     // Makes a move on the board.
     void MakeMove(Move move);
 
+    // Move piece on square from to square to.
+    void MovePiece(Square from, Square to);
+    void MovePiece(Square from, Square to, PieceType piece);
+
     // Undoes the last move that was made.
     void UndoMove();
     
