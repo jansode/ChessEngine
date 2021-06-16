@@ -42,6 +42,7 @@ template void LegalAll<BLACK>(const Board& board, std::vector<Move>* move_list);
 template<Side side>
 void PseudoLegalPawns(const Board& board, std::vector<Move>* move_list)
 {
+    constexpr Side opponent = (side == WHITE)?BLACK:WHITE;
     constexpr Bitboard last_rank = (side == WHITE)?kBitboardRank8:kBitboardRank1;
     constexpr Bitboard second_rank = (side == WHITE)?kBitboardRank2:kBitboardRank7;
     constexpr Bitboard attacks_piece = (side == WHITE)?ATTACKS_WHITE_PAWN:ATTACKS_BLACK_PAWN;
@@ -77,7 +78,7 @@ void PseudoLegalPawns(const Board& board, std::vector<Move>* move_list)
 
         Bitboard attacks_target = attacks[attacks_piece][square];
 
-        Bitboard captures = (board.OccupiedBySide(side)&attacks_target);
+        Bitboard captures = (board.OccupiedBySide(opponent)&attacks_target);
 
         Bitboard promotions = quiet_moves & last_rank;
         promotions |= captures & last_rank;
