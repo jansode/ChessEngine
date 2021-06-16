@@ -265,13 +265,8 @@ std::string Board::GenerateFenString() const
 
 void Board::MovePiece(Square from, Square to)
 {
-    Bitboard from_bb = bb_from_square(from);
-    Bitboard to_bb = bb_from_square(to);
-    Bitboard from_to_bb = from_bb | to_bb;
-
     PieceType piece = GetPieceOnSquare(from);
-    pieces_[piece] ^= from_to_bb;
-    
+    MovePiece(from,to,piece);
 }
 
 void Board::MovePiece(Square from, Square to, PieceType piece)
