@@ -280,17 +280,16 @@ void Board::MovePiece(Square from, Square to, PieceType piece)
     Bitboard to_bb = bb_from_square(to);
     Bitboard from_to_bb = from_bb | to_bb;
     pieces_[piece] ^= from_to_bb;
-    
 }
 
 void Board::MakeMove(Move move)
 {
+    history_.push_back({state_,move});
+
 	if (piece_of_type(move.piece, KINGS) && !state_.king_has_moved[state_.side_to_move])
 	{
 		state_.king_has_moved[state_.side_to_move] = true;
 	}
-
-    history_.push_back({state_,move});
 
     Side side = state_.side_to_move;
     state_.side_to_move = ((state_.side_to_move == WHITE)?BLACK:WHITE);
@@ -367,24 +366,27 @@ void Board::UndoMove()
    
     Undo undo_info = history_.back();
     history_.pop_back();
-
     state_ = undo_info.state;
 
     Move undo_move = undo_info.move; 
 
-    // TODO 
+
     switch(undo_move.type)
     {
         case CASTLE_KINGSIDE:
         {
-            if(state_.side_to_move == WHITE) pieces_[WHITE_KING] <<= 2;
-            else pieces_[BLACK_KING] <<= 2;
+            if(state_.side_to_move == WHITE)
+                MovePiece(F1,H1,WHITE_ROOKS);
+            else 
+                MovePiece(F8,H8,BLACK_ROOKS);
             break;
         }
         case CASTLE_QUEENSIDE:
         {
-            if(state_.side_to_move == WHITE) pieces_[WHITE_KING] >>= 2;
-            else pieces_[BLACK_KING] >>= 2;
+            if(state_.side_to_move == WHITE) 
+                MovePiece(D1,A1,WHITE_ROOKS);
+            else 
+                MovePiece(D8,A8,WHITE_ROOKS);
             break;
         }
     }

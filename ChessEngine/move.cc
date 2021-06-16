@@ -25,14 +25,9 @@ Move move_from_uci(const Board& board, const std::string& move_str)
     Square from = square_from_algebraic(std::string() + move_str[0] + move_str[1]);
     Square to = square_from_algebraic(std::string() + move_str[2] + move_str[3]);
 
-
 	PieceType piece = board.GetPieceOnSquare(from);
 
-    // Find out the move by matching the source and destination squares
-    // to a generated move.
     Board tmp_board = board; 
-    std::vector<Move> legal_moves;
-    move_generation::LegalAll(board,&legal_moves,side);
 
 	// Check if king moves into a castling move.
 	if (piece == WHITE_KING || piece == BLACK_KING)
@@ -40,32 +35,41 @@ Move move_from_uci(const Board& board, const std::string& move_str)
 		if (to == G1 && from == E1 && board.CanCastle(WHITE, WHITE_KINGSIDE))
 		{
 			new_move.type = CASTLE_KINGSIDE;
-			new_move.from = H1; new_move.to = F1;
-			new_move.piece = WHITE_ROOKS;
+            new_move.from = from;
+            new_move.to = to;
+			new_move.piece = WHITE_KING;
 			return new_move;
 		}
 		else if (to == C1 && from == E1 && board.CanCastle(WHITE, WHITE_QUEENSIDE))
 		{
 			new_move.type = CASTLE_QUEENSIDE;
-			new_move.from = A1; new_move.to = D1;
-			new_move.piece = WHITE_ROOKS;
+            new_move.from = from;
+            new_move.to = to;
+			new_move.piece = WHITE_KING;
 			return new_move;
 		}
 		else if (to == G8 && from == E8 && board.CanCastle(BLACK, BLACK_KINGSIDE))
 		{
 			new_move.type = CASTLE_KINGSIDE;
-			new_move.from = H8; new_move.to = F8;
-			new_move.piece = BLACK_ROOKS;
+            new_move.from = from;
+            new_move.to = to;
+			new_move.piece = BLACK_KING;
 			return new_move;
 		}
 		else if (to == C8 && from == E8 && board.CanCastle(BLACK, BLACK_QUEENSIDE))
 		{
 			new_move.type = CASTLE_QUEENSIDE;
-			new_move.from = A8; new_move.to = D8;
-			new_move.piece = BLACK_ROOKS;
+            new_move.from = from;
+            new_move.to = to;
+			new_move.piece = BLACK_KING;
 			return new_move;
 		}
 	}
+
+    // Find out the move by matching the source and destination squares
+    // to a generated move.
+    std::vector<Move> legal_moves;
+    move_generation::LegalAll(board,&legal_moves,side);
 
     // Check that the move is a legal move.
     for(const Move& m : legal_moves)

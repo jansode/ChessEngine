@@ -65,6 +65,8 @@ public:
 	std::string GenerateFenString() const;
 
     // Makes a move on the board.
+    // This also updates board state as opposed to 
+    // the MovePiece function.
     void MakeMove(Move move);
 
     // Move piece on square from to square to.

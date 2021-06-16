@@ -21,13 +21,7 @@ void LegalAll(const Board& board, std::vector<Move>* move_list, Side side)
 {
 	// TODO optimize this better.
     std::vector<Move> pseudo_moves;
-
-    PseudoLegalPawns(board,&pseudo_moves,side);
-    PseudoLegalKnights(board,&pseudo_moves,side);
-    PseudoLegalBishops(board,&pseudo_moves,side);
-    PseudoLegalRooks(board,&pseudo_moves,side);
-    PseudoLegalQueens(board,&pseudo_moves,side);
-    PseudoLegalKings(board,&pseudo_moves,side);
+    PseudoLegalAll(board,&pseudo_moves,side);
 
     // Only add the moves that don't leave the king in check.
     Board test_board = board;

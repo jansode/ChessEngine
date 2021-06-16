@@ -260,7 +260,7 @@ namespace
 
     void piece_bitboard(Board *board, const std::vector<std::string>& tokens)
     {
-        if(tokens.size() == 0)
+        if(tokens.size() < 2)
             return;
         
         std::string piece_type = std::string("") + tokens[0] + " " + tokens[1];

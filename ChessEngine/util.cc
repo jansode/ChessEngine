@@ -93,7 +93,7 @@ std::string get_piece_name(PieceType piece)
 
     std::string color = (piece >= WHITE_PAWNS && piece <= WHITE_KING)?"White ":"Black ";
     std::string piece_type_name("");
-    switch(piece%6)
+    switch(piece%NUM_PIECES)
     {
         case 0: piece_type_name+="Pawn"; break;
         case 1: piece_type_name+="Knight"; break;
