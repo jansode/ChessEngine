@@ -39,7 +39,11 @@ bool StartSearch(Search *search, Board *board)
 int AlphaBeta(Search *search, Board *board, int alpha, int beta, int depth, bool maximizing_side)
 {
 	std::vector<Move> moves; 
-	move_generation::LegalAll(*board,&moves,board->SideToMove());
+
+    if(board->SideToMove() == WHITE)
+	    move_generation::LegalAll<WHITE>(*board,&moves);
+    else
+	    move_generation::LegalAll<BLACK>(*board,&moves);
 
 	if(depth == 0 || moves.size() == 0)	
 		return evaluation::evaluate(board);

@@ -69,7 +69,11 @@ Move move_from_uci(const Board& board, const std::string& move_str)
     // Find out the move by matching the source and destination squares
     // to a generated move.
     std::vector<Move> legal_moves;
-    move_generation::LegalAll(board,&legal_moves,side);
+
+    if(side == WHITE)
+        move_generation::LegalAll<WHITE>(board,&legal_moves);
+    else
+        move_generation::LegalAll<BLACK>(board,&legal_moves);
 
     // Check that the move is a legal move.
     for(const Move& m : legal_moves)

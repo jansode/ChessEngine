@@ -14,16 +14,18 @@ namespace move_generation
 
     //void Generate(const Board& board, std::vector<Move>* move_list);
 
-    void LegalAll(const Board& board, std::vector<Move>* move_list, Side side);
-
-    void PseudoLegalAll(const Board& board, std::vector<Move>* move_list, Side side);
+    template<Side side>
+    void LegalAll(const Board& board, std::vector<Move>* move_list);
 
     template<Side side>
-    void GeneratePawnMoves(const Board& board, std::vector<Move>* move_list);
+    void PseudoLegalAll(const Board& board, std::vector<Move>* move_list);
+
+    template<Side side>
+    void PseudoLegalPawns(const Board& board, std::vector<Move>* move_list);
 
     //void GeneratePseudoLegal(const Board& board, std::vector<Move>* move_list);
 
-    void PseudoLegalPawns(const Board& board, std::vector<Move>* move_list, Side side);
+    //void PseudoLegalPawns(const Board& board, std::vector<Move>* move_list, Side side);
     void PseudoLegalKnights(const Board& board, std::vector<Move>* move_list, Side side);
 
     void PseudoLegalBishops(const Board& board, std::vector<Move>* move_list, Side side);

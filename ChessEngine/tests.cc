@@ -64,7 +64,11 @@ namespace
 
 		if (depth == 0) return 1;
 
-		move_generation::LegalAll(board, &move_list, board.state_.side_to_move);
+        if(board.SideToMove() == WHITE)
+		    move_generation::LegalAll<WHITE>(board, &move_list);
+        else
+		    move_generation::LegalAll<BLACK>(board, &move_list);
+
 		for (int i = 0;i < move_list.size();++i)
 		{
 			board.MakeMove(move_list[i]);

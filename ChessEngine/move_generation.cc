@@ -17,11 +17,12 @@ void Init()
 	magic_bitboards::init();
 }
 
-void LegalAll(const Board& board, std::vector<Move>* move_list, Side side)
+template <Side side>
+void LegalAll(const Board& board, std::vector<Move>* move_list)
 {
 	// TODO optimize this better.
     std::vector<Move> pseudo_moves;
-    PseudoLegalAll(board,&pseudo_moves,side);
+    PseudoLegalAll<side>(board,&pseudo_moves);
 
     // Only add the moves that don't leave the king in check.
     Board test_board = board;
@@ -35,42 +36,35 @@ void LegalAll(const Board& board, std::vector<Move>* move_list, Side side)
     }
 }
 
-void PseudoLegalAll(const Board& board, std::vector<Move>* move_list, Side side)
-{
-    PseudoLegalPawns(board,move_list,side);
-    PseudoLegalKnights(board,move_list,side);
-    PseudoLegalBishops(board,move_list,side);
-    PseudoLegalRooks(board,move_list,side);
-    PseudoLegalQueens(board,move_list,side);
-    PseudoLegalKings(board,move_list,side);
-}
+template void LegalAll<WHITE>(const Board& board, std::vector<Move>* move_list);
+template void LegalAll<BLACK>(const Board& board, std::vector<Move>* move_list);
 
 template<Side side>
-void GeneratePawnMoves(const Board& board, std::vector<Move>* move_list)
+void PseudoLegalPawns(const Board& board, std::vector<Move>* move_list)
 {
-    // TODO do as much as possible at compile time.
-    /*
     constexpr Bitboard last_rank = (side == WHITE)?kBitboardRank8:kBitboardRank1;
     constexpr Bitboard second_rank = (side == WHITE)?kBitboardRank2:kBitboardRank7;
-    constexpr Piece our_pawns = (side == WHITE)?WHITE_PAWNS:BLACK_PAWNS;
-    constexpr Piece opponent_pawns = (side == WHITE)?BLACK_PAWNS:WHITE_PAWNS;
+    constexpr Bitboard attacks_piece = (side == WHITE)?ATTACKS_WHITE_PAWN:ATTACKS_BLACK_PAWN;
+    constexpr PieceType our_pawns = (side == WHITE)?WHITE_PAWNS:BLACK_PAWNS;
+    constexpr PieceType opponent_pawns = (side == WHITE)?BLACK_PAWNS:WHITE_PAWNS;
 
     Bitboard pawns = board.pieces_[our_pawns];
 
     while(pawns)
     {
         Square square = PopLSB(&pawns);
-        Bitboard square_bb = BitboardFromSquare(square);
+        Bitboard square_bb = bb_from_square(square);
 
-        if(square_bb & kLastRank) continue;
+        // Impossible situation. The pawn has to promote on the last rank.
+        if(square_bb & last_rank) continue;
 
         Bitboard single_target = (side == WHITE) ? square_bb << 8 : square_bb >> 8;
         Bitboard double_target = (side == WHITE) ? square_bb << 16 : square_bb >> 16;
 
         Bitboard quiet_moves = (board.GetOccupied() & single_target) ^ single_target;
-        
-        Bitboard double_moves;
-        if(side == WHITE)
+
+        Bitboard double_moves = 0ULL;
+        if constexpr (side == WHITE)
         {
             double_moves = ((second_rank & square_bb) << 16) 
             & ((board.GetOccupied() & double_target) ^ (quiet_moves << 8));
@@ -80,10 +74,42 @@ void GeneratePawnMoves(const Board& board, std::vector<Move>* move_list)
             double_moves = ((second_rank & square_bb) >> 16) 
             & ((board.GetOccupied() & double_target) ^ (quiet_moves >> 8));
         }
+
+        Bitboard attacks_target = attacks[attacks_piece][square];
+
+        Bitboard captures = (board.OccupiedBySide(side)&attacks_target);
+
+        Bitboard promotions = quiet_moves & last_rank;
+        promotions |= captures & last_rank;
+
+        quiet_moves &= ~promotions;
+        captures &= ~promotions;
+
+        AddQuietMoves(square,quiet_moves,our_pawns,move_list);
+        AddDoublePawnMoves(square,double_moves, our_pawns,move_list);
+        AddCaptureMoves(square,captures,our_pawns,move_list,board);
+        AddPromotionMoves(square,promotions,our_pawns,move_list,board);
     }
-    */
 }
 
+template void PseudoLegalPawns<WHITE>(const Board &board, std::vector<Move>* move_list);
+template void PseudoLegalPawns<BLACK>(const Board &board, std::vector<Move>* move_list);
+
+template <Side side>
+void PseudoLegalAll(const Board& board, std::vector<Move>* move_list)
+{
+    PseudoLegalPawns<side>(board,move_list);
+    PseudoLegalKnights(board,move_list,side);
+    PseudoLegalBishops(board,move_list,side);
+    PseudoLegalRooks(board,move_list,side);
+    PseudoLegalQueens(board,move_list,side);
+    PseudoLegalKings(board,move_list,side);
+}
+
+template void PseudoLegalAll<WHITE>(const Board& board, std::vector<Move>* move_list);
+template void PseudoLegalAll<BLACK>(const Board& board, std::vector<Move>* move_list);
+
+/*
 void PseudoLegalPawns(const Board& board, std::vector<Move> *move_list, Side side)
 {
     if(side == WHITE)
@@ -161,6 +187,7 @@ void PseudoLegalPawns(const Board& board, std::vector<Move> *move_list, Side sid
         }
     }
 }
+*/
 
 void PseudoLegalKnights(const Board& board, std::vector<Move>* move_list, Side side)
 {

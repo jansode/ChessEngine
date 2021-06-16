@@ -93,7 +93,10 @@ namespace
         std::vector<Move> move_list;
         if(token == "pawns")
         {
-            move_generation::PseudoLegalPawns(*board,&move_list,board->state_.side_to_move);
+            if(board->SideToMove() == WHITE)
+                move_generation::PseudoLegalPawns<WHITE>(*board,&move_list);
+            else
+                move_generation::PseudoLegalPawns<BLACK>(*board,&move_list);
         }
         else if(token == "bishops")
         {
@@ -117,7 +120,10 @@ namespace
         }
         else if(token == "all")
         {
-            move_generation::LegalAll(*board,&move_list,board->state_.side_to_move);
+            if(board->SideToMove() == WHITE)
+                move_generation::LegalAll<WHITE>(*board,&move_list);
+            else
+                move_generation::LegalAll<BLACK>(*board,&move_list);
         }
         else
         {
