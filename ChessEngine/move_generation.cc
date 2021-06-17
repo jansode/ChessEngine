@@ -104,7 +104,7 @@ void PseudoLegalAll(const Board& board, std::vector<Move>* move_list)
     PseudoLegalBishops<side>(board,move_list);
     PseudoLegalRooks<side>(board,move_list);
     PseudoLegalQueens<side>(board,move_list);
-    PseudoLegalKings(board,move_list,side);
+    PseudoLegalKings<side>(board,move_list);
 }
 
 template void PseudoLegalAll<WHITE>(const Board& board, std::vector<Move>* move_list);
@@ -214,63 +214,43 @@ void PseudoLegalQueens(const Board& board, std::vector<Move>* move_list)
 template void PseudoLegalQueens<WHITE>(const Board& board, std::vector<Move>* move_list);
 template void PseudoLegalQueens<BLACK>(const Board& board, std::vector<Move>* move_list);
 
-void PseudoLegalKings(const Board& board, std::vector<Move>* move_list, Side side)
+template <Side side>
+void PseudoLegalKings(const Board& board, std::vector<Move>* move_list)
 {
-    if(side == WHITE)
+    constexpr PieceType pieces = (side == WHITE)?WHITE_KING:BLACK_KING;
+    constexpr Castling castling_ks = (side == WHITE)?WHITE_KINGSIDE:BLACK_KINGSIDE;
+    constexpr Castling castling_qs = (side == WHITE)?WHITE_QUEENSIDE:BLACK_QUEENSIDE;
+    constexpr Side opponent = (side == WHITE)?BLACK:WHITE;
+
+    Bitboard king = board.pieces_[pieces];
+
+    while(king)
     {
-        Bitboard king = board.pieces_[WHITE_KING];
-        while(king)
-        {
-            Square square = PopLSB(&king);
-            Bitboard square_bb = bb_from_square(square);
+        Square square = PopLSB(&king);
+        Bitboard square_bb = bb_from_square(square);
 
-            Bitboard targets = attacks[ATTACKS_KING][square];
-            targets &= ~board.OccupiedBySide(WHITE);
+        Bitboard targets = attacks[ATTACKS_KING][square];
+        targets &= ~board.OccupiedBySide(side);
 
-            Bitboard captures = (board.OccupiedBySide(BLACK)&targets);
-            Bitboard quiet_moves = targets & ~captures; 
+        Bitboard captures = (board.OccupiedBySide(opponent)&targets);
+        Bitboard quiet_moves = targets & ~captures; 
 
-            AddQuietMoves(square,quiet_moves,WHITE_KING,move_list);
-            AddCaptureMoves(square,captures,WHITE_KING,move_list,board);
-        }
-
-        if(board.CanCastle(side,WHITE_KINGSIDE))
-        {
-            AddCastlingMoves(WHITE_KINGSIDE,move_list);
-        }
-        if(board.CanCastle(side,WHITE_QUEENSIDE))
-        {
-            AddCastlingMoves(WHITE_QUEENSIDE,move_list);
-        }
+        AddQuietMoves(square,quiet_moves,pieces,move_list);
+        AddCaptureMoves(square,captures,pieces,move_list,board);
     }
-    else
+
+    if(board.CanCastle(side,castling_ks))
     {
-        Bitboard king = board.pieces_[BLACK_KING];
-        while(king)
-        {
-            Square square = PopLSB(&king);
-            Bitboard square_bb = bb_from_square(square);
-
-            Bitboard targets = attacks[ATTACKS_KING][square];
-            targets &= ~board.OccupiedBySide(BLACK);
-
-            Bitboard captures = (board.OccupiedBySide(WHITE)&targets);
-            Bitboard quiet_moves = targets & ~captures; 
-
-            AddQuietMoves(square,quiet_moves,BLACK_KING,move_list);
-            AddCaptureMoves(square,captures,BLACK_KING,move_list,board);
-        }
-
-        if(board.CanCastle(side,BLACK_KINGSIDE))
-        {
-            AddCastlingMoves(BLACK_KINGSIDE,move_list);
-        }
-        if(board.CanCastle(side,BLACK_QUEENSIDE))
-        {
-            AddCastlingMoves(BLACK_QUEENSIDE,move_list);
-        }
+        AddCastlingMoves(castling_ks,move_list);
+    }
+    if(board.CanCastle(side,castling_qs))
+    {
+        AddCastlingMoves(castling_qs,move_list);
     }
 }
+
+template void PseudoLegalKings<WHITE>(const Board& board, std::vector<Move>* move_list);
+template void PseudoLegalKings<BLACK>(const Board& board, std::vector<Move>* move_list);
 
 void AddQuietMoves(Square from, Bitboard destinations, PieceType piece, std::vector<Move>* move_list)
 {
