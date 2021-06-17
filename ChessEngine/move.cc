@@ -131,13 +131,11 @@ std::string move_to_algebraic(const Move &m)
 {
 	std::string output("");
 
-    /*
-	if(!(m.piece == WHITE_PAWNS || m.piece == BLACK_PAWNS))
-		output += get_piece_name(m.piece)[0];
-    */
-
 	output+= algebraic_from_square(m.from) + "";
 	output+= algebraic_from_square(m.to);
+
+    if(m.promotion != PIECE_TYPE_NONE)
+	    output+= piece_character(m.promotion);
 
 	return output;
 }

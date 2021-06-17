@@ -253,7 +253,7 @@ namespace
     {
         if (tokens.size() == 0)
         {
-            tests::start_perft(kDefaultPerftDepth,true);
+            tests::start_perft(kDefaultPerftDepth,false);
             return;
         }
         else if(tokens[0] == "current")
