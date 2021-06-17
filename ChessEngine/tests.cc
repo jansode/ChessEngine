@@ -1,6 +1,7 @@
 #include <vector>
 #include <iostream>
 #include <fstream>
+#include <algorithm>
 
 #include "attacks.h"
 #include "tests.h"
@@ -149,6 +150,17 @@ namespace tests
         }
     }
 
+    void write_moves_to_result_string(PerftStats& stats, std::ostringstream& result_str)
+    {
+        std::vector<std::string> results;
+        for(auto move_node : stats.depth_results)
+            results.push_back(std::string("") + move_to_algebraic(move_node.m) + ": " + std::to_string(move_node.nodes));
+
+        std::sort(results.begin(),results.end());
+        for(auto move : results)
+            result_str << move << "\n";
+    }
+
 	bool start_perft(const Board& board, unsigned depth, std::ostringstream& result_str, const PerftResults* results)
 	{
 		++depth;
@@ -175,10 +187,7 @@ namespace tests
 				result_str << depth_ok << "\n";
 
                 result_str << "Moves: \n";
-
-                for(auto move_node : stats.depth_results)
-                    result_str << move_to_algebraic(move_node.m) << ": " << move_node.nodes << "\n";
-
+                write_moves_to_result_string(stats, result_str);
                 result_str << "\n";
 
                 if(!match) results_match = false;
@@ -186,10 +195,7 @@ namespace tests
 			else
 			{
                 result_str << "\nMoves: \n";
-
-                for(auto move_node : stats.depth_results)
-                    result_str << move_to_algebraic(move_node.m) << ": " << move_node.nodes << "\n";
-
+                write_moves_to_result_string(stats, result_str);
                 result_str << "\n";
 			}
 			nodes = 0;

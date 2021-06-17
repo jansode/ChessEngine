@@ -73,4 +73,7 @@ namespace tests
 	// the given piece for each square on the board. 
 	// @piece: PieceType enum of the piece to print the attacks for.
 	void print_attacks(PieceType piece);
+
+    // Write result moves into result_str in lexicographical order.
+    void write_moves_to_result_string(PerftStats& stats, std::ostringstream& result_str);
 }
