@@ -100,7 +100,10 @@ namespace
         }
         else if(token == "bishops")
         {
-            move_generation::PseudoLegalBishops(*board,&move_list,board->state_.side_to_move);
+            if(board->SideToMove() == WHITE)
+                move_generation::PseudoLegalBishops<WHITE>(*board,&move_list);
+            else
+                move_generation::PseudoLegalBishops<BLACK>(*board,&move_list);
         }
         else if(token == "knights")
         {
