@@ -122,7 +122,10 @@ namespace
         }
         else if(token == "queens")
         {
-            move_generation::PseudoLegalQueens(*board,&move_list,board->state_.side_to_move);
+            if(board->SideToMove() == WHITE)
+                move_generation::PseudoLegalQueens<WHITE>(*board,&move_list);
+            else
+                move_generation::PseudoLegalQueens<BLACK>(*board,&move_list);
         }
         else if(token == "kings")
         {
