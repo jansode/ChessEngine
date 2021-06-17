@@ -102,7 +102,7 @@ void PseudoLegalAll(const Board& board, std::vector<Move>* move_list)
     PseudoLegalPawns<side>(board,move_list);
     PseudoLegalKnights<side>(board,move_list);
     PseudoLegalBishops<side>(board,move_list);
-    PseudoLegalRooks(board,move_list,side);
+    PseudoLegalRooks<side>(board,move_list);
     PseudoLegalQueens(board,move_list,side);
     PseudoLegalKings(board,move_list,side);
 }
@@ -161,43 +161,26 @@ void PseudoLegalBishops(const Board& board, std::vector<Move>* move_list)
 template void PseudoLegalBishops<WHITE>(const Board& board, std::vector<Move>* move_list);
 template void PseudoLegalBishops<BLACK>(const Board& board, std::vector<Move>* move_list);
 
-void PseudoLegalRooks(const Board& board, std::vector<Move>* move_list, Side side)
+template <Side side>
+void PseudoLegalRooks(const Board& board, std::vector<Move>* move_list)
 {
-    if(side == WHITE)
+    constexpr PieceType pieces = (side == WHITE)?WHITE_ROOKS:BLACK_ROOKS;
+    constexpr Side opponent = (side == WHITE)?BLACK:WHITE;
+
+    Bitboard rooks = board.pieces_[pieces];
+    while(rooks)
     {
-        Bitboard rooks = board.pieces_[WHITE_ROOKS];
-        while(rooks)
-        {
-            Square square = PopLSB(&rooks);
-            Bitboard square_bb = bb_from_square(square);
+        Square square = PopLSB(&rooks);
+        Bitboard square_bb = bb_from_square(square);
 
-            Bitboard targets = rook_moves(board.GetOccupied(),square);
-            targets &= ~board.OccupiedBySide(WHITE);
+        Bitboard targets = rook_moves(board.GetOccupied(),square);
+        targets &= ~board.OccupiedBySide(side);
 
-            Bitboard captures = (board.OccupiedBySide(BLACK)&targets);
-            Bitboard quiet_moves = targets & ~captures; 
+        Bitboard captures = (board.OccupiedBySide(opponent)&targets);
+        Bitboard quiet_moves = targets & ~captures; 
 
-            AddQuietMoves(square,quiet_moves,WHITE_ROOKS,move_list);
-            AddCaptureMoves(square,captures,WHITE_ROOKS,move_list,board);
-        }
-    }
-    else
-    {
-        Bitboard rooks = board.pieces_[BLACK_ROOKS];
-        while(rooks)
-        {
-            Square square = PopLSB(&rooks);
-            Bitboard square_bb = bb_from_square(square);
-
-            Bitboard targets = rook_moves(board.GetOccupied(),square);
-            targets &= ~board.OccupiedBySide(BLACK);
-
-            Bitboard captures = (board.OccupiedBySide(WHITE)&targets);
-            Bitboard quiet_moves = targets & ~captures; 
-
-            AddQuietMoves(square,quiet_moves,BLACK_ROOKS,move_list);
-            AddCaptureMoves(square,captures,BLACK_ROOKS,move_list,board);
-        }
+        AddQuietMoves(square,quiet_moves,pieces,move_list);
+        AddCaptureMoves(square,captures,pieces,move_list,board);
     }
 }
 void PseudoLegalQueens(const Board& board, std::vector<Move>* move_list, Side side)

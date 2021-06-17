@@ -10,10 +10,6 @@ namespace move_generation
 {
     void Init();
 
-    //template <PieceType piece> 
-
-    //void Generate(const Board& board, std::vector<Move>* move_list);
-
     template<Side side>
     void LegalAll(const Board& board, std::vector<Move>* move_list);
 
@@ -29,7 +25,8 @@ namespace move_generation
     template<Side side>
     void PseudoLegalBishops(const Board& board, std::vector<Move>* move_list);
 
-    void PseudoLegalRooks(const Board& board, std::vector<Move>* move_list, Side side);
+    template<Side side>
+    void PseudoLegalRooks(const Board& board, std::vector<Move>* move_list);
 
     void PseudoLegalQueens(const Board& board, std::vector<Move>* move_list, Side side);
 
