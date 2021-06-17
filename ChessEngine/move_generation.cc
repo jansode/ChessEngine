@@ -45,7 +45,7 @@ void PseudoLegalPawns(const Board& board, std::vector<Move>* move_list)
     constexpr Side opponent = (side == WHITE)?BLACK:WHITE;
     constexpr Bitboard last_rank = (side == WHITE)?kBitboardRank8:kBitboardRank1;
     constexpr Bitboard second_rank = (side == WHITE)?kBitboardRank2:kBitboardRank7;
-    constexpr Bitboard attacks_piece = (side == WHITE)?ATTACKS_WHITE_PAWN:ATTACKS_BLACK_PAWN;
+    constexpr PieceAttacks attacks_piece = (side == WHITE)?ATTACKS_WHITE_PAWN:ATTACKS_BLACK_PAWN;
     constexpr PieceType our_pawns = (side == WHITE)?WHITE_PAWNS:BLACK_PAWNS;
     constexpr PieceType opponent_pawns = (side == WHITE)?BLACK_PAWNS:WHITE_PAWNS;
 
@@ -100,7 +100,7 @@ template <Side side>
 void PseudoLegalAll(const Board& board, std::vector<Move>* move_list)
 {
     PseudoLegalPawns<side>(board,move_list);
-    PseudoLegalKnights(board,move_list,side);
+    PseudoLegalKnights<side>(board,move_list);
     PseudoLegalBishops(board,move_list,side);
     PseudoLegalRooks(board,move_list,side);
     PseudoLegalQueens(board,move_list,side);
@@ -110,122 +110,29 @@ void PseudoLegalAll(const Board& board, std::vector<Move>* move_list)
 template void PseudoLegalAll<WHITE>(const Board& board, std::vector<Move>* move_list);
 template void PseudoLegalAll<BLACK>(const Board& board, std::vector<Move>* move_list);
 
-/*
-void PseudoLegalPawns(const Board& board, std::vector<Move> *move_list, Side side)
+template<Side side>
+void PseudoLegalKnights(const Board& board, std::vector<Move>* move_list)
 {
-    if(side == WHITE)
+    constexpr PieceType pieces = (side == WHITE)?WHITE_KNIGHTS:BLACK_KNIGHTS;
+    constexpr Side opponent = (side==WHITE)?BLACK:WHITE;
+
+    Bitboard knights = board.pieces_[pieces];
+    while(knights)
     {
-        Bitboard pawns = board.pieces_[WHITE_PAWNS];
-        while(pawns)
-        {
-            Square square = PopLSB(&pawns);
-            Bitboard square_bb = bb_from_square(square);
+        Square square = PopLSB(&knights);
+        Bitboard square_bb = bb_from_square(square);
+        
+        Bitboard targets = attacks[ATTACKS_KNIGHT][square];
+        Bitboard quiet_moves = ((board.GetOccupied()&targets) ^ (targets)); 
+        Bitboard captures = (board.OccupiedBySide(opponent)&targets);
 
-            if(square_bb & kBitboardRank8) continue;
-
-            Bitboard curr_target = square_bb<<8;
-            Bitboard quiet_moves = ((board.GetOccupied()&curr_target) ^ (curr_target)); 
-            curr_target = square_bb<<16;
-
-			Bitboard double_moves = 0ULL;
-			if (quiet_moves)
-			{
-				double_moves = ((kBitboardRank2&square_bb) << 16)
-				&((board.GetOccupied()&curr_target) ^ (quiet_moves << 8));
-			}
-
-            curr_target = attacks[ATTACKS_WHITE_PAWN][square];
-            Bitboard captures = (board.OccupiedBySide(BLACK)&curr_target); 
-
-            Bitboard promotions = quiet_moves & kBitboardRank8;
-            promotions |= captures & kBitboardRank8;
-
-            // Add these moves only once.
-            quiet_moves &= ~promotions;
-            captures &= ~promotions;
-
-            AddQuietMoves(square,quiet_moves,WHITE_PAWNS,move_list);
-            AddDoublePawnMoves(square,double_moves, WHITE_PAWNS,move_list);
-            AddCaptureMoves(square,captures,WHITE_PAWNS,move_list,board);
-            AddPromotionMoves(square,promotions,WHITE_PAWNS,move_list,board);
-        }
-    }
-    else
-    {
-        Bitboard pawns = board.pieces_[BLACK_PAWNS];
-        while(pawns)
-        {
-
-            Square square = PopLSB(&pawns);
-            Bitboard square_bb = bb_from_square(square);
-
-            if(square_bb & kBitboardRank1) continue;
-
-            Bitboard curr_target = square_bb>>8;
-            Bitboard quiet_moves = ((board.GetOccupied()&curr_target) ^ (curr_target)); 
-            
-            curr_target = square_bb>>16;
-			Bitboard double_moves = 0ULL;
-			if (quiet_moves)
-			{
-				double_moves = ((kBitboardRank7&square_bb) >> 16)
-					&((board.GetOccupied()&curr_target) ^ (quiet_moves >> 8));
-			}
-
-            curr_target = attacks[ATTACKS_BLACK_PAWN][square];
-            Bitboard captures = (board.OccupiedBySide(WHITE)&curr_target); 
-
-            Bitboard promotions = quiet_moves & kBitboardRank1;
-            promotions |= captures & kBitboardRank1;
-
-            quiet_moves &= ~promotions;
-            captures &= ~promotions;
-
-            AddQuietMoves(square,quiet_moves,BLACK_PAWNS,move_list);
-            AddDoublePawnMoves(square,double_moves, BLACK_PAWNS,move_list);
-            AddCaptureMoves(square,captures,BLACK_PAWNS,move_list,board);
-            AddPromotionMoves(square,promotions,BLACK_PAWNS,move_list,board);
-        }
+        AddQuietMoves(square,quiet_moves,pieces,move_list);
+        AddCaptureMoves(square,captures,pieces,move_list,board);
     }
 }
-*/
 
-void PseudoLegalKnights(const Board& board, std::vector<Move>* move_list, Side side)
-{
-    if(side == WHITE)
-    {
-        Bitboard knights = board.pieces_[WHITE_KNIGHTS];
-        while(knights)
-        {
-            Square square = PopLSB(&knights);
-            Bitboard square_bb = bb_from_square(square);
-
-            Bitboard targets = attacks[ATTACKS_KNIGHT][square];
-
-            Bitboard quiet_moves = ((board.GetOccupied()&targets) ^ (targets)); 
-            Bitboard captures = (board.OccupiedBySide(BLACK)&targets);
-
-            AddQuietMoves(square,quiet_moves,WHITE_KNIGHTS,move_list);
-            AddCaptureMoves(square,captures,WHITE_KNIGHTS,move_list,board);
-        }
-    }
-    else
-    {
-        Bitboard knights = board.pieces_[BLACK_KNIGHTS];
-        while(knights)
-        {
-            Square square = PopLSB(&knights);
-            Bitboard square_bb = bb_from_square(square);
-
-            Bitboard targets = attacks[ATTACKS_KNIGHT][square];
-            Bitboard quiet_moves = ((board.GetOccupied()&targets) ^ (targets)); 
-            Bitboard captures = (board.OccupiedBySide(WHITE)&targets);
-            
-            AddQuietMoves(square,quiet_moves,BLACK_KNIGHTS,move_list);
-            AddCaptureMoves(square,captures,BLACK_KNIGHTS,move_list,board);
-        }
-    }
-}
+template void PseudoLegalKnights<WHITE>(const Board& board, std::vector<Move>* move_list);
+template void PseudoLegalKnights<BLACK>(const Board& board, std::vector<Move>* move_list);
 
 void PseudoLegalBishops(const Board& board, std::vector<Move>* move_list, Side side)
 {

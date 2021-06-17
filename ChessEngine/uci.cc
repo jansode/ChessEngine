@@ -104,7 +104,11 @@ namespace
         }
         else if(token == "knights")
         {
-            move_generation::PseudoLegalKnights(*board,&move_list,board->state_.side_to_move);
+            if(board->SideToMove() == WHITE)
+                move_generation::PseudoLegalKnights<WHITE>(*board,&move_list);
+            else
+                move_generation::PseudoLegalKnights<BLACK>(*board,&move_list);
+
         }
         else if(token == "rooks")
         {

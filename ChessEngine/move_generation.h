@@ -23,10 +23,8 @@ namespace move_generation
     template<Side side>
     void PseudoLegalPawns(const Board& board, std::vector<Move>* move_list);
 
-    //void GeneratePseudoLegal(const Board& board, std::vector<Move>* move_list);
-
-    //void PseudoLegalPawns(const Board& board, std::vector<Move>* move_list, Side side);
-    void PseudoLegalKnights(const Board& board, std::vector<Move>* move_list, Side side);
+    template<Side side>
+    void PseudoLegalKnights(const Board& board, std::vector<Move>* move_list);
 
     void PseudoLegalBishops(const Board& board, std::vector<Move>* move_list, Side side);
 
