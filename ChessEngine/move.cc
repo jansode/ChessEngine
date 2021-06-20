@@ -87,7 +87,7 @@ Move move_from_uci(const Board& board, const std::string& move_str)
 
     // Promotion move.
     PieceType promotion = PIECE_TYPE_NONE;
-	if (move_str.size() == 5)
+	if (move_str.length() == 5)
 	{
         switch(move_str[4])
         {
@@ -105,11 +105,11 @@ Move move_from_uci(const Board& board, const std::string& move_str)
 
 void print_move(const Move& m)
 {
-    std::cout<<"From:\t"<<algebraic_from_square(m.from)<<"\n"<<
-               "To:\t"<<algebraic_from_square(m.to)<<"\n"<<
-               "Piece:\t"<<get_piece_name(m.piece)<<"\n"<<
-               "Type:\t"<<get_move_type(m.type)<<"\n"<<
-               "Promotion:\t"<<get_piece_name(m.piece)<<"\n"<<
+    std::cout<<"From:\t\t"<<algebraic_from_square(m.from)<<"\n"<<
+               "To:\t\t"<<algebraic_from_square(m.to)<<"\n"<<
+               "Piece:\t\t"<<get_piece_name(m.piece)<<"\n"<<
+               "Type:\t\t"<<get_move_type(m.type)<<"\n"<<
+               "Promotion:\t"<<get_piece_name(m.promotion)<<"\n"<<
                "Captured piece:\t"<<get_piece_name(m.captured_type)<<"\n"<<std::endl;
 }
 

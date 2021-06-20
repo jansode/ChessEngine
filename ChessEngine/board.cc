@@ -365,7 +365,6 @@ void Board::UndoMove()
 
     Move undo_move = undo_info.move; 
 
-
     switch(undo_move.type)
     {
         case CASTLE_KINGSIDE:
@@ -395,6 +394,7 @@ void Board::UndoMove()
     if(undo_move.capture) pieces_[undo_move.captured_type] |= to;
     if(undo_move.promotion != PIECE_TYPE_NONE) 
     {
+        pieces_[undo_move.piece] &= ~to;
         pieces_[undo_move.promotion] &= ~to;
     }
 }
