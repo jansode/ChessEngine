@@ -118,12 +118,18 @@ namespace tests
 	// in the PerftTestResults vector.
 	void start_perft(unsigned depth_limit, bool display_only_failed)
 	{
+        unsigned passed = 0;
+
 		Board test_board;
 		for (auto result : PerftTestPositions)
 		{
 			test_board.SetPositionFromFEN(result.second.fen);
             perft_results(test_board,&result.second,depth_limit,display_only_failed);
+
+            if(result.second.passed) ++passed;
 		}
+
+        std::cout<<passed<<" out of "<<PerftTestPositions.size()<<" passed. \n";
 	}
 
     void perft_results(const Board& board, PerftResults* result, unsigned depth_limit, bool display_only_failed)
@@ -134,6 +140,8 @@ namespace tests
 
         std::ostringstream result_str;
         bool results_match = start_perft(board, depth, result_str, result);
+
+        result->passed = results_match;
 
         std::string fen = board.GenerateFenString();
         std::cout << "Fen: " << fen << "\n";

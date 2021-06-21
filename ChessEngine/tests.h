@@ -44,7 +44,8 @@ struct PerftResults
 
 	// The depth to terminate the test.
 	unsigned to_depth;
-
+    
+    bool passed = false;
 };
 
 
