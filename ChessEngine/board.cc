@@ -503,18 +503,30 @@ bool Board::CanCastle(Side side, Castling type) const
     switch(type)
     {
         case BLACK_QUEENSIDE:
+            if(SquareAttacked(D8,side) || SquareAttacked(C8,side))
+                return false;
+
 			rook_exists = pieces_[BLACK_ROOKS] & bb_from_square(A8);
             return !(kCastlingSquaresBQ & occupied) && rook_exists;
             break;
         case BLACK_KINGSIDE:
+            if(SquareAttacked(F8,side) || SquareAttacked(G8,side))
+                return false;
+
             rook_exists = pieces_[BLACK_ROOKS] & bb_from_square(H8);
             return !(kCastlingSquaresBK & occupied) && rook_exists;
             break;
         case WHITE_QUEENSIDE:
+            if(SquareAttacked(D1,side) || SquareAttacked(C1,side))
+                return false;
+
             rook_exists = pieces_[WHITE_ROOKS] & bb_from_square(A1);
             return !(kCastlingSquaresWQ & occupied) && rook_exists;
             break;
         case WHITE_KINGSIDE:
+            if(SquareAttacked(F1,side) || SquareAttacked(G1,side))
+                return false;
+
             rook_exists = pieces_[WHITE_ROOKS] & bb_from_square(H1);
             return !(kCastlingSquaresWK & occupied) && rook_exists;
             break;
