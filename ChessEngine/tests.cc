@@ -141,7 +141,8 @@ namespace tests
         std::ostringstream result_str;
         bool results_match = start_perft(board, depth, result_str, result);
 
-        result->passed = results_match;
+        if(result != nullptr)
+            result->passed = results_match;
 
         std::string fen = board.GenerateFenString();
         std::cout << "Fen: " << fen << "\n";
