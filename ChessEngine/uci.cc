@@ -282,9 +282,19 @@ namespace
 
     void piece_bitboard(Board *board, const std::vector<std::string>& tokens)
     {
+        if(tokens.size() == 1)
+        {
+            if(tokens[0] == "occupied")
+            {
+                print_bitboard(board->GetOccupied());
+                return;
+            }
+
+        }
+
         if(tokens.size() < 2)
             return;
-        
+
         std::string piece_type = std::string("") + tokens[0] + " " + tokens[1];
         PieceType piece = piece_type_from_string(piece_type);
         if(piece == PIECE_TYPE_NONE)

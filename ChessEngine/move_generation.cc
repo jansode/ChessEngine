@@ -65,15 +65,17 @@ void PseudoLegalPawns(const Board& board, std::vector<Move>* move_list)
         Bitboard quiet_moves = (board.GetOccupied() & single_target) ^ single_target;
 
         Bitboard double_moves = 0ULL;
+        Bitboard on_second_rank = second_rank & square_bb;
+        Bitboard target_empty = ~(board.GetOccupied() & double_target);
         if constexpr (side == WHITE)
         {
-            double_moves = ((second_rank & square_bb) << 16) 
-            & ((board.GetOccupied() & double_target) ^ (quiet_moves << 8));
+            double_moves = (on_second_rank << 16) 
+            & (target_empty & (quiet_moves << 8));
         }
         else if(side == BLACK)
         {
-            double_moves = ((second_rank & square_bb) >> 16) 
-            & ((board.GetOccupied() & double_target) ^ (quiet_moves >> 8));
+            double_moves = (on_second_rank >> 16) 
+            & (target_empty & (quiet_moves >> 8));
         }
 
         Bitboard attacks_target = attacks[attacks_piece][square];
