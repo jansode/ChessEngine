@@ -302,7 +302,7 @@ void Board::MakeMove(Move move)
             // pawn move. The en passant
             // square is the square behind 
             // the destination square.
-            state_.en_passant_square = (Square)((side == WHITE)?move.to-8:move.to+8);
+            state_.en_passant_square = (Square)((side == WHITE)?move.to+SQUARE_DIRECTION_DOWN:move.to+SQUARE_DIRECTION_UP);
             break;
         }
         // The king moves for 

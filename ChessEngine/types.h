@@ -22,6 +22,11 @@ enum Square
     SQUARE_NONE
 };
 
+const int SQUARE_DIRECTION_LEFT = -1;
+const int SQUARE_DIRECTION_RIGHT = 1;
+const int SQUARE_DIRECTION_UP = -8;
+const int SQUARE_DIRECTION_DOWN = 8;
+
 enum Direction
 {
     NORTH,
