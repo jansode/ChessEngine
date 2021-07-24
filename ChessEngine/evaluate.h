@@ -17,7 +17,7 @@ const int kMateScore = 100000;
 
 const int pawn_structure_weight = 1;
 
-int evaluate(Board *board);
+float evaluate(Board *board);
 
 }
 

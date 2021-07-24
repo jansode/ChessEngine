@@ -27,11 +27,11 @@ bool StartSearch(Search *search, Board *board)
 	search->best_move = NULL_MOVE;
 	search->best_eval = evaluation::kDrawScore;
 
-	AlphaBeta(search,board,std::numeric_limits<int>::min(),std::numeric_limits<int>::max(),3,true);
+	AlphaBeta(search,board,std::numeric_limits<int>::min(),std::numeric_limits<int>::max(),search->depth,true);
 
 	std::cout<<"Search stopped\n";
 
-	std::cout<<"Best move: "<<move_to_algebraic(search->best_move)<<"\n";
+	std::cout<<"Best move: "<<move_to_algebraic(search->best_move)<<"\n<<" << std::flush;
 	return true;
 }
 
@@ -77,6 +77,7 @@ int AlphaBeta(Search *search, Board *board, int alpha, int beta, int depth, bool
 		{
 			board->MakeMove(moves[i]);
 			value = std::min(value,AlphaBeta(search,board,alpha,beta,depth-1,true));
+
 			board->UndoMove();
 
 			beta = std::min(beta,value);

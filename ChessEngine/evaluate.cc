@@ -1,12 +1,13 @@
 #include "evaluate.h"
+#include "bitboards.h"
 
 #define TERM(score,white_piece,black_piece) \
-(score * (board->pieces_[white_piece] - board->pieces_[black_piece]))
+(score * (PopulationCount(board->pieces_[white_piece]) - PopulationCount(board->pieces_[black_piece])))
 
 namespace evaluation
 {
 
-int evaluate(Board *board)
+float evaluate(Board *board)
 {
 	//TODO Improve evaluation
 	int evaluation = 0;
@@ -18,7 +19,7 @@ int evaluate(Board *board)
 		TERM(kRookScore, WHITE_ROOKS, BLACK_ROOKS) +
 		TERM(kQueenScore, WHITE_QUEEN, BLACK_QUEEN);
 
-	evaluation += material_score;
+	evaluation += material_score / 100;
 
 	return evaluation;
 }

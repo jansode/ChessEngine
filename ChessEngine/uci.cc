@@ -2,6 +2,7 @@
 #include <string>
 #include <sstream>
 #include <thread>
+#include <iomanip>
 
 #include "uci.h"
 #include "move_generation.h"
@@ -310,7 +311,6 @@ namespace uci
     {
         Board board;
         Search search;
-		std::thread search_thread;
 
 		bool search_active = false;
 
@@ -340,8 +340,11 @@ namespace uci
             {
 				//if(search_active) continue;
 
+		        std::thread search_thread;
+
                 go(&search, &board, tokens);
 				search_thread = std::thread(StartSearch,&search,&board);
+                search_thread.detach();
 				search_active = true;
             }
             else if(command == "stop")
@@ -407,8 +410,8 @@ namespace uci
 			}
 			else if (command == "evaluate")
 			{
-				int evaluation = board.Evaluate();
-				std::cout << "Evaluation: " << evaluation << "\n";
+				float evaluation = board.Evaluate();
+				std::cout << "Evaluation: " << std::fixed << std::setw(3) << std::setprecision(2) << evaluation << "\n";
 			}
             else if(command == "isready")
             {
